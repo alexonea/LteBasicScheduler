@@ -13,11 +13,22 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package ltebasicscheduler.eNB;
+package ltebasicscheduler.nodes.UE;
 
-//
-// TODO auto-generated module
-//
-simple ENB
+module UE
 {
+    gates:
+        inout ctrl;
+        output data;
+
+    submodules:
+        source : RGen;
+        queue: Queue;
+        manager : Manager;
+
+	connections:
+	    source.out --> queue.in;
+	    ctrl <--> manager.ctrl;
+	    queue.request <-- manager.queueRequest;
+	    queue.out --> data;
 }

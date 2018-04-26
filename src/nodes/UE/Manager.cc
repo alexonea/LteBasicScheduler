@@ -13,18 +13,16 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef __LTEBASICSCHEDULER_UE_H_
-#define __LTEBASICSCHEDULER_UE_H_
+#include "Manager.h"
 
-#include <omnetpp.h>
+Define_Module(Manager);
 
-using namespace omnetpp;
-
-class UE : public cSimpleModule
+void Manager::initialize()
 {
-  protected:
-    virtual void initialize();
-    virtual void handleMessage(cMessage *msg);
-};
+    // TODO - Generated method body
+}
 
-#endif
+void Manager::handleMessage(cMessage *msg)
+{
+    // TODO - Generated method body
+}

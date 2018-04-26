@@ -13,8 +13,21 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package ltebasicscheduler.UE;
+#ifndef __LTEBASICSCHEDULER_QUEUE_H_
+#define __LTEBASICSCHEDULER_QUEUE_H_
 
-simple UE
+#include <omnetpp.h>
+
+using namespace omnetpp;
+
+/**
+ * TODO - Generated class
+ */
+class Queue : public cSimpleModule
 {
-}
+  protected:
+    virtual void initialize();
+    virtual void handleMessage(cMessage *msg);
+};
+
+#endif

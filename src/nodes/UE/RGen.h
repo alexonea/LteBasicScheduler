@@ -13,16 +13,20 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include "UE.h"
+#ifndef __LTEBASICSCHEDULER_RGEN_H_
+#define __LTEBASICSCHEDULER_RGEN_H_
 
-Define_Module(UE);
+#include <omnetpp.h>
 
-void UE::initialize()
+using namespace omnetpp;
+
+class RGen : public cSimpleModule
 {
-    // TODO - Generated method body
-}
+private:
+    double _nextEventOffset;
+protected:
+    virtual void initialize();
+    virtual void handleMessage(cMessage *msg);
+};
 
-void UE::handleMessage(cMessage *msg)
-{
-    // TODO - Generated method body
-}
+#endif

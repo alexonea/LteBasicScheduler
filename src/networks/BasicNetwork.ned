@@ -13,21 +13,24 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef __LTEBASICSCHEDULER_ENB_H_
-#define __LTEBASICSCHEDULER_ENB_H_
+package ltebasicscheduler.networks;
 
-#include <omnetpp.h>
+import ltebasicscheduler.nodes.UE.*;
+import ltebasicscheduler.nodes.eNB.*;
 
-using namespace omnetpp;
-
-/**
- * TODO - Generated class
- */
-class ENB : public cSimpleModule
+network BasicNetwork
 {
-  protected:
-    virtual void initialize();
-    virtual void handleMessage(cMessage *msg);
-};
-
-#endif
+    parameters:
+        int size = default(10);
+    
+    submodules:
+        n[size] : UE;
+        eNodeB : eNB;
+    
+    connections:
+        for i = 0..(size - 1)
+        {
+            n[i].ctrl <--> { delay = uniform(10ms, 100ms); } <--> eNodeB.conn++;
+            n[i].data --> { delay = uniform(10ms, 100ms); } --> eNodeB.sink++;
+        }
+}

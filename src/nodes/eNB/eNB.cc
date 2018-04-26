@@ -15,14 +15,14 @@
 
 #include "eNB.h"
 
-Define_Module(ENB);
+Define_Module(eNB);
 
-void ENB::initialize()
+void eNB::initialize()
 {
     // TODO - Generated method body
 }
 
-void ENB::handleMessage(cMessage *msg)
+void eNB::handleMessage(cMessage *msg)
 {
-    // TODO - Generated method body
+    delete msg;
 }
