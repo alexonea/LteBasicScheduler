@@ -1,0 +1,3 @@
+package ltebasicscheduler;
+
+@license(LGPL);
