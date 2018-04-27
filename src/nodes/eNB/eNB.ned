@@ -15,11 +15,20 @@
 
 package ltebasicscheduler.nodes.eNB;
 
-simple eNB
+module eNB
 {
-    parameters:
-        int maxConnections = default(100);
-    gates:
-		inout conn[maxConnections] @loose;
-		input sink[maxConnections] @loose;
+	parameters:
+		int maxConnections = default(100);
+	gates:
+		inout ctrl[maxConnections] @loose;
+		input ulink[maxConnections] @loose;
+	submodules:
+		sink : Sink;
+		sched : Scheduler;
+	connections:
+		for i = 0..(maxConnections - 1)
+		{
+			ulink++ --> sink.drain++;
+			ctrl++ <--> sched.ctrl++;
+		}
 }

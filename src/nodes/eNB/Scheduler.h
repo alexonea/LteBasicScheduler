@@ -13,32 +13,23 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include "RGen.h"
+#ifndef __LTEBASICSCHEDULER_SCHEDULER_H_
+#define __LTEBASICSCHEDULER_SCHEDULER_H_
 
-#include <cstdlib>
-#include <ctime>
+#include <omnetpp.h>
 
-#include "../../messages/DataPacket_m.h"
+using namespace omnetpp;
 
-Define_Module(RGen);
-
-void RGen::initialize()
+/**
+ * TODO - Generated class
+ */
+class Scheduler : public cSimpleModule
 {
-    std::srand(std::time(nullptr));
-    this->_nextEventOffset = std::rand() / ((RAND_MAX + 1.0));
+private:
+    double _schedCycle;
+protected:
+    virtual void initialize();
+    virtual void handleMessage(cMessage *msg);
+};
 
-    cMessage *notification = new cMessage("notification");
-    scheduleAt(simTime() + _nextEventOffset, notification);
-}
-
-void RGen::handleMessage(cMessage *msg)
-{
-    if (msg->isSelfMessage())
-    {
-        DataPacket *dp = new DataPacket("data");
-        send(dp, "out");
-
-        this->_nextEventOffset = std::rand() / ((RAND_MAX + 1.0) / 6);
-        scheduleAt(simTime() + _nextEventOffset, msg);
-    }
-}
+#endif

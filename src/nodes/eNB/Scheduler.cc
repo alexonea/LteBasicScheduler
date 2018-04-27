@@ -13,32 +13,24 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include "RGen.h"
+#include "Scheduler.h"
 
-#include <cstdlib>
-#include <ctime>
+Define_Module(Scheduler);
 
-#include "../../messages/DataPacket_m.h"
-
-Define_Module(RGen);
-
-void RGen::initialize()
+void Scheduler::initialize()
 {
-    std::srand(std::time(nullptr));
-    this->_nextEventOffset = std::rand() / ((RAND_MAX + 1.0));
+    this->_schedCycle = par("schedCycle");
 
     cMessage *notification = new cMessage("notification");
-    scheduleAt(simTime() + _nextEventOffset, notification);
+    scheduleAt(simTime() + _schedCycle, notification);
 }
 
-void RGen::handleMessage(cMessage *msg)
+void Scheduler::handleMessage(cMessage *msg)
 {
     if (msg->isSelfMessage())
     {
-        DataPacket *dp = new DataPacket("data");
-        send(dp, "out");
+        // invoke scheduler here
 
-        this->_nextEventOffset = std::rand() / ((RAND_MAX + 1.0) / 6);
-        scheduleAt(simTime() + _nextEventOffset, msg);
+        scheduleAt(simTime() + _schedCycle, msg);
     }
 }

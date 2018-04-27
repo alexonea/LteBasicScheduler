@@ -30,7 +30,7 @@ network BasicNetwork
     connections:
         for i = 0..(size - 1)
         {
-            n[i].ctrl <--> { delay = uniform(10ms, 100ms); } <--> eNodeB.conn++;
-            n[i].data --> { delay = uniform(10ms, 100ms); } --> eNodeB.sink++;
+			n[i].ctrl <--> { delay = uniform(10ms, 100ms); } <--> eNodeB.ctrl++;
+			n[i].data --> { delay = uniform(10ms, 100ms); } --> eNodeB.ulink++;
         }
 }

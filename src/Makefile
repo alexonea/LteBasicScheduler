@@ -30,7 +30,13 @@ PROJECTRELATIVE_PATH = src
 O = $(PROJECT_OUTPUT_DIR)/$(CONFIGNAME)/$(PROJECTRELATIVE_PATH)
 
 # Object files for local .cc, .msg and .sm files
-OBJS = $O/nodes/UE/Manager.o $O/nodes/UE/Queue.o $O/nodes/UE/RGen.o $O/nodes/eNB/eNB.o $O/messages/DataPacket_m.o
+OBJS = \
+    $O/nodes/UE/Manager.o \
+    $O/nodes/UE/Queue.o \
+    $O/nodes/UE/RGen.o \
+    $O/nodes/eNB/Scheduler.o \
+    $O/nodes/eNB/Sink.o \
+    $O/messages/DataPacket_m.o
 
 # Message files
 MSGFILES = \

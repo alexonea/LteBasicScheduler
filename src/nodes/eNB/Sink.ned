@@ -13,16 +13,12 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include "eNB.h"
+package ltebasicscheduler.nodes.eNB;
 
-Define_Module(eNB);
-
-void eNB::initialize()
+simple Sink
 {
-    // TODO - Generated method body
-}
-
-void eNB::handleMessage(cMessage *msg)
-{
-    delete msg;
+    parameters:
+        int size = default(10);
+    gates:
+        input drain[size];
 }

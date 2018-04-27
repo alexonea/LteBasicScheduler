@@ -13,8 +13,8 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef __LTEBASICSCHEDULER_ENB_H_
-#define __LTEBASICSCHEDULER_ENB_H_
+#ifndef __LTEBASICSCHEDULER_SINK_H_
+#define __LTEBASICSCHEDULER_SINK_H_
 
 #include <omnetpp.h>
 
@@ -23,7 +23,7 @@ using namespace omnetpp;
 /**
  * TODO - Generated class
  */
-class eNB : public cSimpleModule
+class Sink : public cSimpleModule
 {
   protected:
     virtual void initialize();

@@ -13,32 +13,13 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include "RGen.h"
+package ltebasicscheduler.nodes.eNB;
 
-#include <cstdlib>
-#include <ctime>
-
-#include "../../messages/DataPacket_m.h"
-
-Define_Module(RGen);
-
-void RGen::initialize()
+simple Scheduler
 {
-    std::srand(std::time(nullptr));
-    this->_nextEventOffset = std::rand() / ((RAND_MAX + 1.0));
-
-    cMessage *notification = new cMessage("notification");
-    scheduleAt(simTime() + _nextEventOffset, notification);
-}
-
-void RGen::handleMessage(cMessage *msg)
-{
-    if (msg->isSelfMessage())
-    {
-        DataPacket *dp = new DataPacket("data");
-        send(dp, "out");
-
-        this->_nextEventOffset = std::rand() / ((RAND_MAX + 1.0) / 6);
-        scheduleAt(simTime() + _nextEventOffset, msg);
-    }
+    parameters:
+        int size = default(10);
+        double schedCycle = 0.001 @units(s);
+    gates:
+        inout ctrl[size] @loose;
 }

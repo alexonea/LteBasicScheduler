@@ -13,32 +13,16 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include "RGen.h"
+#include "Sink.h"
 
-#include <cstdlib>
-#include <ctime>
+Define_Module(Sink);
 
-#include "../../messages/DataPacket_m.h"
-
-Define_Module(RGen);
-
-void RGen::initialize()
+void Sink::initialize()
 {
-    std::srand(std::time(nullptr));
-    this->_nextEventOffset = std::rand() / ((RAND_MAX + 1.0));
-
-    cMessage *notification = new cMessage("notification");
-    scheduleAt(simTime() + _nextEventOffset, notification);
+    // TODO - Generated method body
 }
 
-void RGen::handleMessage(cMessage *msg)
+void Sink::handleMessage(cMessage *msg)
 {
-    if (msg->isSelfMessage())
-    {
-        DataPacket *dp = new DataPacket("data");
-        send(dp, "out");
-
-        this->_nextEventOffset = std::rand() / ((RAND_MAX + 1.0) / 6);
-        scheduleAt(simTime() + _nextEventOffset, msg);
-    }
+    delete msg;
 }
