@@ -23,8 +23,8 @@ module eNB
 		inout ctrl[maxConnections] @loose;
 		input ulink[maxConnections] @loose;
 	submodules:
-		sink : Sink;
-		sched : Scheduler;
+		sink : Sink { size = maxConnections; };
+		sched : Scheduler { size = maxConnections; };
 	connections:
 		for i = 0..(maxConnections - 1)
 		{

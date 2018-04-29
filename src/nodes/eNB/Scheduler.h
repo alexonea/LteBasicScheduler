@@ -20,13 +20,11 @@
 
 using namespace omnetpp;
 
-/**
- * TODO - Generated class
- */
 class Scheduler : public cSimpleModule
 {
 private:
     double _schedCycle;
+    int _numConnections;
 protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);

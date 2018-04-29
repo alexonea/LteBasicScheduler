@@ -34,13 +34,16 @@ OBJS = \
     $O/nodes/UE/Manager.o \
     $O/nodes/UE/Queue.o \
     $O/nodes/UE/RGen.o \
+    $O/nodes/common/Transciever.o \
     $O/nodes/eNB/Scheduler.o \
     $O/nodes/eNB/Sink.o \
-    $O/messages/DataPacket_m.o
+    $O/messages/DataPacket_m.o \
+    $O/messages/ResourceBlock_m.o
 
 # Message files
 MSGFILES = \
-    messages/DataPacket.msg
+    messages/DataPacket.msg \
+    messages/ResourceBlock.msg
 
 # SM files
 SMFILES =

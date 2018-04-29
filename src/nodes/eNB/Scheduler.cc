@@ -20,8 +20,9 @@ Define_Module(Scheduler);
 void Scheduler::initialize()
 {
     this->_schedCycle = par("schedCycle");
+    this->_numConnections = par("size");
 
-    cMessage *notification = new cMessage("notification");
+    cMessage *notification = new cMessage("scheduler");
     scheduleAt(simTime() + _schedCycle, notification);
 }
 
@@ -30,6 +31,11 @@ void Scheduler::handleMessage(cMessage *msg)
     if (msg->isSelfMessage())
     {
         // invoke scheduler here
+        for (int i = 0; i < _numConnections; i++)
+        {
+            cMessage *ctrl = new cMessage("allow");
+            send(ctrl, this->gate("ctrl", i));
+        }
 
         scheduleAt(simTime() + _schedCycle, msg);
     }
