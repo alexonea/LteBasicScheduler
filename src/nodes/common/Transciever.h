@@ -20,12 +20,12 @@
 
 using namespace omnetpp;
 
-/**
- * TODO - Generated class
- */
 class Transciever : public cSimpleModule
 {
-  protected:
+private:
+    int _symbolsPerRE;
+    int _bandwidth;
+protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
 };

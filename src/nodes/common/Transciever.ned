@@ -21,8 +21,8 @@ simple Transciever
         bool extCP = default(false);
         int bandwidth = default(20) @units(MHz);
     gates:
-        output dataRX;
+        output dataRX @loose;
         input dataTX;
         output RBTX;
-        input RBRX;
+        input RBRX @loose;
 }
