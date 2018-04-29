@@ -22,6 +22,7 @@ network BasicNetwork
 {
     parameters:
         int size = default(10);
+        int bandwidth = default(20) @units(MHz);
     
     submodules:
         n[size] : UE;
