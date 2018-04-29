@@ -24,5 +24,16 @@ void Manager::initialize()
 
 void Manager::handleMessage(cMessage *msg)
 {
-    // TODO - Generated method body
+    if (msg->arrivedOn("ctrl"))
+    {
+        // message from eNodeB
+        if (strcmp(msg->getName(), "allow") == 0)
+        {
+            // allowance to transmit, so we transmit 1 RB
+            cMessage *req = new cMessage("dequeue 1 RB");
+            send(req, "queueRequest");
+
+            delete msg;
+        }
+    }
 }
