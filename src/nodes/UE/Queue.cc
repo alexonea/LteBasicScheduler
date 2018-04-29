@@ -15,14 +15,41 @@
 
 #include "Queue.h"
 
+#include <stdio.h>
+
 Define_Module(Queue);
 
 void Queue::initialize()
 {
-    // TODO - Generated method body
 }
 
 void Queue::handleMessage(cMessage *msg)
 {
-    send(msg, "out");
+    if (msg->isSelfMessage())
+    {
+        delete msg;
+    }
+    else if (msg->arrivedOn("request"))
+    {
+        if (!_queueData.empty())
+        {
+            ResourceBlock *rb = _queueData.front();
+            _queueData.pop();
+            send(rb, "out");
+        }
+
+        delete msg;
+    }
+    else if (msg->arrivedOn("in"))
+    {
+        ResourceBlock *rb = static_cast <ResourceBlock *> (msg);
+        _queueData.push(rb);
+
+        cDisplayString &str = this->getParentModule()->getDisplayString();
+        str.set("a");
+    }
+    else
+    {
+        delete msg;
+    }
 }

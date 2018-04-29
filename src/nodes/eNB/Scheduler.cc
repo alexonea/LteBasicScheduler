@@ -34,7 +34,7 @@ void Scheduler::handleMessage(cMessage *msg)
         for (int i = 0; i < _numConnections; i++)
         {
             cMessage *ctrl = new cMessage("allow");
-            send(ctrl, this->gate("ctrl", i));
+            send(ctrl, this->gate("ctrl$o", i));
         }
 
         scheduleAt(simTime() + _schedCycle, msg);

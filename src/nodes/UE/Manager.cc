@@ -24,7 +24,7 @@ void Manager::initialize()
 
 void Manager::handleMessage(cMessage *msg)
 {
-    if (msg->arrivedOn("ctrl"))
+    if (msg->arrivedOn("ctrl$i"))
     {
         // message from eNodeB
         if (strcmp(msg->getName(), "allow") == 0)

@@ -18,14 +18,17 @@
 
 #include <omnetpp.h>
 
+#include "../../messages/ResourceBlock_m.h"
+
+#include <queue>
+
 using namespace omnetpp;
 
-/**
- * TODO - Generated class
- */
 class Queue : public cSimpleModule
 {
-  protected:
+private:
+    std::queue<ResourceBlock *> _queueData;
+protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
 };
