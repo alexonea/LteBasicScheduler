@@ -13,26 +13,21 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package ltebasicscheduler.nodes.UE;
+#ifndef __LTEBASICSCHEDULER_TRANSCIEVER_H_
+#define __LTEBASICSCHEDULER_TRANSCIEVER_H_
 
-import ltebasicscheduler.nodes.common.Transciever;
+#include <omnetpp.h>
 
-module UE
+using namespace omnetpp;
+
+/**
+ * TODO - Generated class
+ */
+class Transciever : public cSimpleModule
 {
-    gates:
-        inout ctrl;
-        output data;
+  protected:
+    virtual void initialize();
+    virtual void handleMessage(cMessage *msg);
+};
 
-    submodules:
-        source : RGen;
-        queue: Queue;
-        manager : Manager;
-        transciever: Transciever;
-
-	connections:
-	    source.out --> transciever.dataTX;
-	    transciever.RBTX --> queue.in;
-	    ctrl <--> manager.ctrl;
-	    queue.request <-- manager.queueRequest;
-	    queue.out --> data;
-}
+#endif

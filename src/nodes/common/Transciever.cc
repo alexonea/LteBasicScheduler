@@ -13,26 +13,16 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package ltebasicscheduler.nodes.UE;
+#include "Transciever.h"
 
-import ltebasicscheduler.nodes.common.Transciever;
+Define_Module(Transciever);
 
-module UE
+void Transciever::initialize()
 {
-    gates:
-        inout ctrl;
-        output data;
+    // TODO - Generated method body
+}
 
-    submodules:
-        source : RGen;
-        queue: Queue;
-        manager : Manager;
-        transciever: Transciever;
-
-	connections:
-	    source.out --> transciever.dataTX;
-	    transciever.RBTX --> queue.in;
-	    ctrl <--> manager.ctrl;
-	    queue.request <-- manager.queueRequest;
-	    queue.out --> data;
+void Transciever::handleMessage(cMessage *msg)
+{
+    // TODO - Generated method body
 }

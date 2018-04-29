@@ -13,26 +13,13 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package ltebasicscheduler.nodes.UE;
+package ltebasicscheduler.nodes.common;
 
-import ltebasicscheduler.nodes.common.Transciever;
-
-module UE
+simple Transciever
 {
     gates:
-        inout ctrl;
-        output data;
-
-    submodules:
-        source : RGen;
-        queue: Queue;
-        manager : Manager;
-        transciever: Transciever;
-
-	connections:
-	    source.out --> transciever.dataTX;
-	    transciever.RBTX --> queue.in;
-	    ctrl <--> manager.ctrl;
-	    queue.request <-- manager.queueRequest;
-	    queue.out --> data;
+        output dataRX;
+        input dataTX;
+        output RBTX;
+        input RBRX;
 }
