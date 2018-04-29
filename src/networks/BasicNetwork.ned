@@ -26,12 +26,12 @@ network BasicNetwork
     
     submodules:
         n[size] : UE;
-        eNodeB : eNB;
+        eNodeB : eNB { maxConnections = size; };
     
     connections:
         for i = 0..(size - 1)
         {
-			n[i].ctrl <--> { delay = uniform(10ms, 100ms); } <--> eNodeB.ctrl++;
-			n[i].data --> { delay = uniform(10ms, 100ms); } --> eNodeB.ulink++;
+			n[i].ctrl <--> { delay = uniform(10us, 100us); } <--> eNodeB.ctrl++;
+			n[i].data --> { delay = uniform(10us, 100us); } --> eNodeB.ulink++;
         }
 }
