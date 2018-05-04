@@ -19,6 +19,7 @@ simple Sink
 {
     parameters:
         int size = default(10);
+        int statsTimeUnit = default(1) @units(s);
     gates:
         input drain[size];
 }
