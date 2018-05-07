@@ -48,7 +48,9 @@ void Sink::handleMessage(cMessage *msg)
         unitsElapsed++;
         for (int i = 0; i < _numUsers; i++)
         {
-            cTimestampedValue tmp(simTime(), (unsigned long int) _userStats[i].RBsSinceLastTimeUnit);
+            _userStats[i].instDatarate = (double) _userStats[i].RBsSinceLastTimeUnit / _statsUpdateCycle;
+
+            cTimestampedValue tmp(simTime(), (unsigned long int) _userStats[i].instDatarate);
             emit(_signalUserRBs[i], &tmp);
 
             _userStats[i].avrgDatarate = (_userStats[i].avrgDatarate * (unitsElapsed / (unitsElapsed + 1))) + (_userStats[i].RBsSinceLastTimeUnit / (unitsElapsed + 1));

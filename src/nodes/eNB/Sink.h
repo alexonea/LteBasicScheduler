@@ -27,6 +27,7 @@ typedef struct _UserStats
     unsigned int avrgDatarate;
     unsigned int maxDatarate;
     unsigned int minDatarate;
+    double instDatarate;
     unsigned int avrgDelay;
     unsigned int maxDelay;
     unsigned int minDelay;
