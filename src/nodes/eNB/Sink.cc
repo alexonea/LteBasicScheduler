@@ -23,7 +23,18 @@ void Sink::initialize()
 {
     _numUsers = par("size");
     _userStats = new UserStats[_numUsers]();
+    _signalUserRBs = new simsignal_t[_numUsers]();
     _statsUpdateCycle = par("statsTimeUnit");
+
+    for (int i = 0; i < _numUsers; i++)
+    {
+        char userIdStr[12];
+        sprintf(userIdStr, "user%d-RBs", i);
+        _signalUserRBs[i] = registerSignal(userIdStr);
+
+        cProperty *statisticTemplate = this->getProperties()->get("statisticTemplate", "user-RBs");
+        getEnvir()->addResultRecorders(this, _signalUserRBs[i], userIdStr, statisticTemplate);
+    }
 
     cMessage *updateNotification = new cMessage("update");
     scheduleAt(simTime() + _statsUpdateCycle, updateNotification);
@@ -37,11 +48,16 @@ void Sink::handleMessage(cMessage *msg)
         unitsElapsed++;
         for (int i = 0; i < _numUsers; i++)
         {
+            cTimestampedValue tmp(simTime(), (unsigned long int) _userStats[i].RBsSinceLastTimeUnit);
+            emit(_signalUserRBs[i], &tmp);
+
             _userStats[i].avrgDatarate = (_userStats[i].avrgDatarate * (unitsElapsed / (unitsElapsed + 1))) + (_userStats[i].RBsSinceLastTimeUnit / (unitsElapsed + 1));
             _userStats[i].maxDatarate = (_userStats[i].maxDatarate < _userStats[i].RBsSinceLastTimeUnit) ? _userStats[i].RBsSinceLastTimeUnit : _userStats[i].maxDatarate;
             _userStats[i].minDatarate = (_userStats[i].minDatarate > _userStats[i].RBsSinceLastTimeUnit) ? _userStats[i].RBsSinceLastTimeUnit : _userStats[i].minDatarate;
             _userStats[i].RBsSinceLastTimeUnit = 0;
         }
+
+        scheduleAt(simTime() + _statsUpdateCycle, msg);
     }
     else if (msg->arrivedOn("drain"))
     {
@@ -57,6 +73,8 @@ void Sink::handleMessage(cMessage *msg)
 
         _userStats[userId].totalRBs ++;
         _userStats[userId].RBsSinceLastTimeUnit ++;
+
+        EV << "RB arrived at sink from user " << userId << "\n";
 
         delete rb;
     }

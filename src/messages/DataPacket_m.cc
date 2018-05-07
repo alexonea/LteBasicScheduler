@@ -182,8 +182,8 @@ Register_Class(DataPacket)
 DataPacket::DataPacket(const char *name, short kind) : ::omnetpp::cPacket(name,kind)
 {
     this->senderId = 0;
-    for (unsigned int i = 0; i < 1024; i++)
-        this->payload[i] = i;
+    for (unsigned int i=0; i<1024; i++)
+        this->payload[i] = 0;
 }
 
 DataPacket::DataPacket(const DataPacket& other) : ::omnetpp::cPacket(other)

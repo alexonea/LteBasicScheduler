@@ -19,7 +19,9 @@ simple Sink
 {
     parameters:
         int size = default(10);
-        int statsTimeUnit = default(1) @units(s);
+        double statsTimeUnit = default(0.01) @units(s);
+        @signal[user*-RBs] (type=int);
+        @statisticTemplate[user-RBs] (record=vector);
     gates:
         input drain[size];
 }

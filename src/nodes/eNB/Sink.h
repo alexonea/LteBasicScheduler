@@ -41,8 +41,9 @@ protected:
     virtual void finish();
 private:
     unsigned int _numUsers;
-    unsigned int _statsUpdateCycle;
+    double _statsUpdateCycle;
     UserStats *_userStats;
+    simsignal_t *_signalUserRBs;
 };
 
 #endif
