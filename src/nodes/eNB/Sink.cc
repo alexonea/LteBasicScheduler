@@ -23,6 +23,7 @@ void Sink::initialize()
 {
     _numUsers = par("size");
     _userStats = new UserStats[_numUsers]();
+
     _signalUserRBs = new simsignal_t[_numUsers]();
     _statsUpdateCycle = par("statsTimeUnit");
 
@@ -35,6 +36,8 @@ void Sink::initialize()
         cProperty *statisticTemplate = this->getProperties()->get("statisticTemplate", "user-RBs");
         getEnvir()->addResultRecorders(this, _signalUserRBs[i], userIdStr, statisticTemplate);
     }
+
+    _statsUpdateCycle = par("statsTimeUnit");
 
     cMessage *updateNotification = new cMessage("update");
     scheduleAt(simTime() + _statsUpdateCycle, updateNotification);
@@ -75,8 +78,6 @@ void Sink::handleMessage(cMessage *msg)
 
         _userStats[userId].totalRBs ++;
         _userStats[userId].RBsSinceLastTimeUnit ++;
-
-        EV << "RB arrived at sink from user " << userId << "\n";
 
         delete rb;
     }
