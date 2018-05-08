@@ -24,8 +24,9 @@ Define_Module(RGen);
 
 void RGen::initialize()
 {
-    std::srand(std::time(nullptr));
-    this->_nextEventOffset = std::rand() / ((RAND_MAX + 1.0));
+
+    this->_randomGen = this->getRNG(0);
+    this->_nextEventOffset = _randomGen->doubleRand();
 
     cMessage *notification = new cMessage("notification");
     scheduleAt(simTime() + _nextEventOffset, notification);
@@ -38,7 +39,7 @@ void RGen::handleMessage(cMessage *msg)
         DataPacket *dp = new DataPacket("data");
         send(dp, "out");
 
-        this->_nextEventOffset = std::rand() / ((RAND_MAX + 1.0) / 6);
+        this->_nextEventOffset = _randomGen->doubleRand();
         scheduleAt(simTime() + _nextEventOffset, msg);
     }
 }

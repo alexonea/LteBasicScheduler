@@ -24,6 +24,7 @@ class RGen : public cSimpleModule
 {
 private:
     double _nextEventOffset;
+    cRNG *_randomGen;
 protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);

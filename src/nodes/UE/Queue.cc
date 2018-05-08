@@ -60,3 +60,14 @@ void Queue::handleMessage(cMessage *msg)
         delete msg;
     }
 }
+
+void Queue::finish()
+{
+    while (!_queueData.empty())
+    {
+        ResourceBlock *rb = _queueData.front();
+        _queueData.pop();
+
+        delete rb;
+    }
+}
