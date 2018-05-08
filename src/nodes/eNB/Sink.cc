@@ -45,20 +45,15 @@ void Sink::initialize()
 
 void Sink::handleMessage(cMessage *msg)
 {
-    static unsigned int unitsElapsed = 0;
     if (msg->isSelfMessage())
     {
-        unitsElapsed++;
         for (int i = 0; i < _numUsers; i++)
         {
-            _userStats[i].instDatarate = (double) _userStats[i].RBsSinceLastTimeUnit / _statsUpdateCycle;
+            _userStats[i].instDatarate = (double) _userStats[i].bitsSinceLastTimeUnit / _statsUpdateCycle;
 
             emit(_signalUserRBs[i], (unsigned long int) _userStats[i].instDatarate);
 
-            _userStats[i].avrgDatarate = (_userStats[i].avrgDatarate * (unitsElapsed / (unitsElapsed + 1))) + (_userStats[i].RBsSinceLastTimeUnit / (unitsElapsed + 1));
-            _userStats[i].maxDatarate = (_userStats[i].maxDatarate < _userStats[i].RBsSinceLastTimeUnit) ? _userStats[i].RBsSinceLastTimeUnit : _userStats[i].maxDatarate;
-            _userStats[i].minDatarate = (_userStats[i].minDatarate > _userStats[i].RBsSinceLastTimeUnit) ? _userStats[i].RBsSinceLastTimeUnit : _userStats[i].minDatarate;
-            _userStats[i].RBsSinceLastTimeUnit = 0;
+            _userStats[i].bitsSinceLastTimeUnit = 0;
         }
 
         scheduleAt(simTime() + _statsUpdateCycle, msg);
@@ -68,15 +63,11 @@ void Sink::handleMessage(cMessage *msg)
         ResourceBlock *rb = static_cast <ResourceBlock *> (msg);
         unsigned int userId = rb->getArrivalGate()->getIndex();
 
-        unsigned int delay = simTime().inUnit(SIMTIME_S) - _userStats[userId].lastRBTimestamp;
-        _userStats[userId].lastRBTimestamp = simTime().inUnit(SIMTIME_S);
-
-        _userStats[userId].avrgDelay = (_userStats[userId].avrgDelay * (_userStats[userId].totalRBs / (_userStats[userId].totalRBs + 1))) + (delay / (_userStats[userId].totalRBs + 1));
-        _userStats[userId].maxDelay = (_userStats[userId].maxDelay < delay) ? delay : _userStats[userId].maxDelay;
-        _userStats[userId].minDelay = (_userStats[userId].minDelay < delay) ? delay : _userStats[userId].minDelay;
-
         _userStats[userId].totalRBs ++;
-        _userStats[userId].RBsSinceLastTimeUnit ++;
+        _userStats[userId].bitsSinceLastTimeUnit += rb->getSize();
+
+        EV << "Received " << rb->getSize() << " bits from user " << userId << endl;
+        EV << "Total number of bits in the last 1ms is now " << _userStats[userId].bitsSinceLastTimeUnit << endl;
 
         delete rb;
     }

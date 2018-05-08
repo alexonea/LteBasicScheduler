@@ -22,15 +22,9 @@ using namespace omnetpp;
 
 typedef struct _UserStats
 {
-    unsigned int totalRBs;
-    unsigned int RBsSinceLastTimeUnit;
-    unsigned int avrgDatarate;
-    unsigned int maxDatarate;
-    unsigned int minDatarate;
+    unsigned long int totalRBs;
+    unsigned long int bitsSinceLastTimeUnit;
     double instDatarate;
-    unsigned int avrgDelay;
-    unsigned int maxDelay;
-    unsigned int minDelay;
     unsigned int lastRBTimestamp;
 } UserStats;
 

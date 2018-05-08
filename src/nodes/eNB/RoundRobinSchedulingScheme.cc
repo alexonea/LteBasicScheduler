@@ -15,11 +15,15 @@
 
 #include "RoundRobinSchedulingScheme.h"
 
+#include <omnetpp.h>
+
+using namespace omnetpp;
+
 RoundRobinSchedulingScheme::RoundRobinSchedulingScheme(int numUsers)
 {
     this->_numUsers = numUsers;
     this->_numRBs = 30;
-    this->_fixedAllocationSize = 4;
+    this->_fixedAllocationSize = 7;
 
     this->_schedTable = new int[_numRBs];
 }
@@ -46,12 +50,18 @@ SchedulingDecision* RoundRobinSchedulingScheme::schedule()
                currentAllocationPos++;
            }
 
+           EV << "Timeslot " << timeslot << ": ";
+
            /* update the current schedule */
            for (int currentRB = 0; currentRB < _numRBs; currentRB++)
            {
                int userId = _schedTable[currentRB];
                decision->allocateToUser(userId, currentRB, timeslot);
+
+               EV << userId << " ";
            }
+
+           EV << endl;
     }
 
     return decision;

@@ -23,7 +23,7 @@
 #define QAM16 1
 #define QAM64 2
 
-#define PACKET_SIZE 1024
+#define PACKET_SIZE 1024 * 1024
 
 static const int BITS_PER_SYMBOL[3] = { 2, 4, 6 };
 
@@ -55,6 +55,7 @@ void Transciever::handleMessage(cMessage *msg)
         {
             ResourceBlock *rb = new ResourceBlock("RB");
             rb->setSenderId(senderId);
+            rb->setSize(bitsPerRB);
             send(rb, "RBTX");
         }
 
