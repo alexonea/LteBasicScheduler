@@ -15,12 +15,16 @@
 
 #include "Scheduler.h"
 
+#include "../../messages/ResourceAllocation_m.h"
+
 Define_Module(Scheduler);
 
 void Scheduler::initialize()
 {
     this->_schedCycle = par("schedCycle");
     this->_numConnections = par("size");
+
+    this->_schedulingScheme = new RoundRobinSchedulingScheme(_numConnections);
 
     cMessage *notification = new cMessage("scheduler");
     scheduleAt(simTime() + _schedCycle, notification);
@@ -30,13 +34,20 @@ void Scheduler::handleMessage(cMessage *msg)
 {
     if (msg->isSelfMessage())
     {
-        // invoke scheduler here
+        SchedulingDecision *decision = _schedulingScheme->schedule();
         for (int i = 0; i < _numConnections; i++)
         {
-            cMessage *ctrl = new cMessage("allow");
+            ResourceAllocation *ctrl = new ResourceAllocation("scheduler");
+            ctrl->setNumRBsToSend(decision->getAllocationForUser(i).count);
+
             send(ctrl, this->gate("ctrl$o", i));
         }
 
         scheduleAt(simTime() + _schedCycle, msg);
     }
+}
+
+void Scheduler::finish()
+{
+    delete _schedulingScheme;
 }

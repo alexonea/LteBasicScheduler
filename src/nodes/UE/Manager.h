@@ -20,14 +20,14 @@
 
 using namespace omnetpp;
 
-/**
- * TODO - Generated class
- */
 class Manager : public cSimpleModule
 {
-  protected:
+protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
+private:
+    static int count;
+    int _id;
 };
 
 #endif
