@@ -182,8 +182,6 @@ Register_Class(DataPacket)
 DataPacket::DataPacket(const char *name, short kind) : ::omnetpp::cPacket(name,kind)
 {
     this->senderId = 0;
-    for (unsigned int i = 0; i < 1024; i++)
-        this->payload[i] = i;
 }
 
 DataPacket::DataPacket(const DataPacket& other) : ::omnetpp::cPacket(other)
@@ -206,22 +204,18 @@ DataPacket& DataPacket::operator=(const DataPacket& other)
 void DataPacket::copy(const DataPacket& other)
 {
     this->senderId = other.senderId;
-    for (unsigned int i=0; i<1024; i++)
-        this->payload[i] = other.payload[i];
 }
 
 void DataPacket::parsimPack(omnetpp::cCommBuffer *b) const
 {
     ::omnetpp::cPacket::parsimPack(b);
     doParsimPacking(b,this->senderId);
-    doParsimArrayPacking(b,this->payload,1024);
 }
 
 void DataPacket::parsimUnpack(omnetpp::cCommBuffer *b)
 {
     ::omnetpp::cPacket::parsimUnpack(b);
     doParsimUnpacking(b,this->senderId);
-    doParsimArrayUnpacking(b,this->payload,1024);
 }
 
 int DataPacket::getSenderId() const
@@ -232,23 +226,6 @@ int DataPacket::getSenderId() const
 void DataPacket::setSenderId(int senderId)
 {
     this->senderId = senderId;
-}
-
-unsigned int DataPacket::getPayloadArraySize() const
-{
-    return 1024;
-}
-
-unsigned char DataPacket::getPayload(unsigned int k) const
-{
-    if (k>=1024) throw omnetpp::cRuntimeError("Array of size 1024 indexed by %lu", (unsigned long)k);
-    return this->payload[k];
-}
-
-void DataPacket::setPayload(unsigned int k, unsigned char payload)
-{
-    if (k>=1024) throw omnetpp::cRuntimeError("Array of size 1024 indexed by %lu", (unsigned long)k);
-    this->payload[k] = payload;
 }
 
 class DataPacketDescriptor : public omnetpp::cClassDescriptor
@@ -316,7 +293,7 @@ const char *DataPacketDescriptor::getProperty(const char *propertyname) const
 int DataPacketDescriptor::getFieldCount() const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? 2+basedesc->getFieldCount() : 2;
+    return basedesc ? 1+basedesc->getFieldCount() : 1;
 }
 
 unsigned int DataPacketDescriptor::getFieldTypeFlags(int field) const
@@ -329,9 +306,8 @@ unsigned int DataPacketDescriptor::getFieldTypeFlags(int field) const
     }
     static unsigned int fieldTypeFlags[] = {
         FD_ISEDITABLE,
-        FD_ISARRAY | FD_ISEDITABLE,
     };
-    return (field>=0 && field<2) ? fieldTypeFlags[field] : 0;
+    return (field>=0 && field<1) ? fieldTypeFlags[field] : 0;
 }
 
 const char *DataPacketDescriptor::getFieldName(int field) const
@@ -344,9 +320,8 @@ const char *DataPacketDescriptor::getFieldName(int field) const
     }
     static const char *fieldNames[] = {
         "senderId",
-        "payload",
     };
-    return (field>=0 && field<2) ? fieldNames[field] : nullptr;
+    return (field>=0 && field<1) ? fieldNames[field] : nullptr;
 }
 
 int DataPacketDescriptor::findField(const char *fieldName) const
@@ -354,7 +329,6 @@ int DataPacketDescriptor::findField(const char *fieldName) const
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     int base = basedesc ? basedesc->getFieldCount() : 0;
     if (fieldName[0]=='s' && strcmp(fieldName, "senderId")==0) return base+0;
-    if (fieldName[0]=='p' && strcmp(fieldName, "payload")==0) return base+1;
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
@@ -368,9 +342,8 @@ const char *DataPacketDescriptor::getFieldTypeString(int field) const
     }
     static const char *fieldTypeStrings[] = {
         "int",
-        "unsigned char",
     };
-    return (field>=0 && field<2) ? fieldTypeStrings[field] : nullptr;
+    return (field>=0 && field<1) ? fieldTypeStrings[field] : nullptr;
 }
 
 const char **DataPacketDescriptor::getFieldPropertyNames(int field) const
@@ -409,7 +382,6 @@ int DataPacketDescriptor::getFieldArraySize(void *object, int field) const
     }
     DataPacket *pp = (DataPacket *)object; (void)pp;
     switch (field) {
-        case 1: return 1024;
         default: return 0;
     }
 }
@@ -439,7 +411,6 @@ std::string DataPacketDescriptor::getFieldValueAsString(void *object, int field,
     DataPacket *pp = (DataPacket *)object; (void)pp;
     switch (field) {
         case 0: return long2string(pp->getSenderId());
-        case 1: return ulong2string(pp->getPayload(i));
         default: return "";
     }
 }
@@ -455,7 +426,6 @@ bool DataPacketDescriptor::setFieldValueAsString(void *object, int field, int i,
     DataPacket *pp = (DataPacket *)object; (void)pp;
     switch (field) {
         case 0: pp->setSenderId(string2long(value)); return true;
-        case 1: pp->setPayload(i,string2ulong(value)); return true;
         default: return false;
     }
 }

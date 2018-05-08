@@ -13,10 +13,8 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-//
-// TODO generated message class
-//
+
 packet DataPacket {
     int senderId;
-    unsigned char payload[1024];
+    //unsigned char payload[1024];
 }
