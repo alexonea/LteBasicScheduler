@@ -13,21 +13,23 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef __LTEBASICSCHEDULER_MANAGER_H_
-#define __LTEBASICSCHEDULER_MANAGER_H_
+#ifndef NODES_ENB_ROUNDROBINSCHEDULINGSCHEME_H_
+#define NODES_ENB_ROUNDROBINSCHEDULINGSCHEME_H_
 
-#include <omnetpp.h>
+#include "SchedulingDecision.h"
 
-using namespace omnetpp;
-
-class Manager : public cSimpleModule
+class RoundRobinSchedulingScheme
 {
-protected:
-    virtual void initialize();
-    virtual void handleMessage(cMessage *msg);
+public:
+    RoundRobinSchedulingScheme(int numUsers);
+    virtual ~RoundRobinSchedulingScheme();
+
+    SchedulingDecision* schedule();
 private:
-    static int count;
-    int _id;
+    int _numUsers;
+    int _numRBs;
+    int _fixedAllocationSize;
+    int *_schedTable;
 };
 
-#endif
+#endif /* NODES_ENB_ROUNDROBINSCHEDULINGSCHEME_H_ */

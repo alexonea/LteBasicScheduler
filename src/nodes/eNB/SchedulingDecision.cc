@@ -13,21 +13,30 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef __LTEBASICSCHEDULER_MANAGER_H_
-#define __LTEBASICSCHEDULER_MANAGER_H_
+#include "SchedulingDecision.h"
 
-#include <omnetpp.h>
-
-using namespace omnetpp;
-
-class Manager : public cSimpleModule
+SchedulingDecision::SchedulingDecision(int numUsers)
 {
-protected:
-    virtual void initialize();
-    virtual void handleMessage(cMessage *msg);
-private:
-    static int count;
-    int _id;
-};
+    this->_numUsers = numUsers;
+    this->_allocation = new SchUserAllocation[_numUsers]();
+}
 
-#endif
+SchedulingDecision::~SchedulingDecision()
+{
+    delete [] _allocation;
+}
+
+void SchedulingDecision::allocateToUser(int userId, int RB, int timeslot)
+{
+    RBAllocation rballoc;
+    rballoc.RB = RB;
+    rballoc.timeslot = timeslot;
+
+    _allocation[userId].count++;
+    _allocation[userId].RBs.push_back(rballoc);
+}
+
+SchUserAllocation SchedulingDecision::getAllocationForUser(int userId)
+{
+    return _allocation[userId];
+}

@@ -17,6 +17,8 @@
 
 #include <stdio.h>
 
+#include "../../messages/QueueControl_m.h"
+
 Define_Module(Queue);
 
 void Queue::initialize()
@@ -31,14 +33,19 @@ void Queue::handleMessage(cMessage *msg)
     }
     else if (msg->arrivedOn("request"))
     {
-        if (!_queueData.empty())
+        QueueControl *req = static_cast <QueueControl *> (msg);
+        int toDequeue = req->getDequeue();
+
+        while (!_queueData.empty() && toDequeue > 0)
         {
             ResourceBlock *rb = _queueData.front();
             _queueData.pop();
             send(rb, "out");
+
+            toDequeue--;
         }
 
-        delete msg;
+        delete req;
     }
     else if (msg->arrivedOn("in"))
     {

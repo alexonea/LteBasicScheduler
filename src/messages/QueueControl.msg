@@ -13,21 +13,6 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef __LTEBASICSCHEDULER_MANAGER_H_
-#define __LTEBASICSCHEDULER_MANAGER_H_
-
-#include <omnetpp.h>
-
-using namespace omnetpp;
-
-class Manager : public cSimpleModule
-{
-protected:
-    virtual void initialize();
-    virtual void handleMessage(cMessage *msg);
-private:
-    static int count;
-    int _id;
-};
-
-#endif
+message QueueControl {
+    int dequeue;
+}

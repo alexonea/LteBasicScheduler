@@ -13,21 +13,21 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef __LTEBASICSCHEDULER_MANAGER_H_
-#define __LTEBASICSCHEDULER_MANAGER_H_
+#ifndef NODES_ENB_SCHEDULINGUSERALLOCATION_H_
+#define NODES_ENB_SCHEDULINGUSERALLOCATION_H_
 
-#include <omnetpp.h>
+#include <vector>
 
-using namespace omnetpp;
-
-class Manager : public cSimpleModule
+typedef struct _RBAllocation
 {
-protected:
-    virtual void initialize();
-    virtual void handleMessage(cMessage *msg);
-private:
-    static int count;
-    int _id;
-};
+    int RB;
+    int timeslot;
+} RBAllocation;
 
-#endif
+typedef struct _SchUserAllocation
+{
+    int count;
+    std::vector<RBAllocation> RBs;
+} SchUserAllocation;
+
+#endif /* NODES_ENB_SCHEDULINGUSERALLOCATION_H_ */
