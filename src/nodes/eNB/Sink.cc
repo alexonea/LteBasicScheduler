@@ -53,8 +53,7 @@ void Sink::handleMessage(cMessage *msg)
         {
             _userStats[i].instDatarate = (double) _userStats[i].RBsSinceLastTimeUnit / _statsUpdateCycle;
 
-            cTimestampedValue tmp(simTime(), (unsigned long int) _userStats[i].instDatarate);
-            emit(_signalUserRBs[i], &tmp);
+            emit(_signalUserRBs[i], (unsigned long int) _userStats[i].instDatarate);
 
             _userStats[i].avrgDatarate = (_userStats[i].avrgDatarate * (unitsElapsed / (unitsElapsed + 1))) + (_userStats[i].RBsSinceLastTimeUnit / (unitsElapsed + 1));
             _userStats[i].maxDatarate = (_userStats[i].maxDatarate < _userStats[i].RBsSinceLastTimeUnit) ? _userStats[i].RBsSinceLastTimeUnit : _userStats[i].maxDatarate;
@@ -90,4 +89,5 @@ void Sink::handleMessage(cMessage *msg)
 void Sink::finish()
 {
     delete [] _userStats;
+    delete [] _signalUserRBs;
 }

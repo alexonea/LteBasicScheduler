@@ -25,6 +25,17 @@ void Scheduler::initialize()
     this->_numConnections = par("size");
 
     this->_schedulingScheme = new RoundRobinSchedulingScheme(_numConnections);
+    this->_signalUserAllocation = new simsignal_t[_numConnections]();
+
+    for (int i = 0; i < _numConnections; i++)
+    {
+        char userIdStr[12];
+        sprintf(userIdStr, "user%d-allocation", i);
+        _signalUserAllocation[i] = registerSignal(userIdStr);
+
+        cProperty *statisticTemplate = this->getProperties()->get("statisticTemplate", "user-allocation");
+        getEnvir()->addResultRecorders(this, _signalUserAllocation[i], userIdStr, statisticTemplate);
+    }
 
     cMessage *notification = new cMessage("scheduler");
     scheduleAt(simTime() + _schedCycle, notification);
@@ -39,6 +50,8 @@ void Scheduler::handleMessage(cMessage *msg)
         {
             ResourceAllocation *ctrl = new ResourceAllocation("scheduler");
             ctrl->setNumRBsToSend(decision->getAllocationForUser(i).count);
+
+            emit(_signalUserAllocation[i], (unsigned long int) decision->getAllocationForUser(i).count);
 
             send(ctrl, this->gate("ctrl$o", i));
         }

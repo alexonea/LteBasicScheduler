@@ -28,6 +28,7 @@ private:
     double _schedCycle;
     int _numConnections;
     RoundRobinSchedulingScheme *_schedulingScheme;
+    simsignal_t *_signalUserAllocation;
 protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
