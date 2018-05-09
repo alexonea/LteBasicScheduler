@@ -18,16 +18,23 @@
 
 #include <omnetpp.h>
 
+#include "Queue.h"
+#include "../../messages/DataPacket_m.h"
+#include "../../messages/ResourceBlock_m.h"
+
 using namespace omnetpp;
 
-class Transciever : public cSimpleModule
+class Transceiver : public cSimpleModule
 {
 private:
     int _symbolsPerRE;
     int _bandwidth;
+    Queue *_queueManager;
 protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
+public:
+    ResourceBlock** commandEncode(DataPacket *data, int &totalRBs);
 };
 
 #endif

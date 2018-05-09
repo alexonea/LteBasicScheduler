@@ -13,16 +13,23 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package ltebasicscheduler.nodes.common;
+#ifndef NODES_ENB_ROUNDROBINSCHEDULINGSCHEME_H_
+#define NODES_ENB_ROUNDROBINSCHEDULINGSCHEME_H_
 
-simple Transciever
+#include "SchedulingDecision.h"
+
+class RoundRobinSchedulingScheme
 {
-    parameters:
-        bool extCP = default(false);
-        int bandwidth = default(20) @units(MHz);
-    gates:
-        output dataRX @loose;
-        input dataTX;
-        output RBTX;
-        input RBRX @loose;
-}
+public:
+    RoundRobinSchedulingScheme(int numUsers);
+    virtual ~RoundRobinSchedulingScheme();
+
+    SchedulingDecision* schedule();
+private:
+    int _numUsers;
+    int _numRBs;
+    int _fixedAllocationSize;
+    int *_schedTable;
+};
+
+#endif /* NODES_ENB_ROUNDROBINSCHEDULINGSCHEME_H_ */

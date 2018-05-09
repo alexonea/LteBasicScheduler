@@ -18,6 +18,8 @@
 
 #include <omnetpp.h>
 
+#include "RoundRobinSchedulingScheme.h"
+
 using namespace omnetpp;
 
 class Scheduler : public cSimpleModule
@@ -25,9 +27,11 @@ class Scheduler : public cSimpleModule
 private:
     double _schedCycle;
     int _numConnections;
+    RoundRobinSchedulingScheme *_schedulingScheme;
 protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
+    virtual void finish();
 };
 
 #endif

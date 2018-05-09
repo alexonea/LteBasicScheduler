@@ -13,25 +13,6 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef __LTEBASICSCHEDULER_RGEN_H_
-#define __LTEBASICSCHEDULER_RGEN_H_
-
-#include <omnetpp.h>
-
-#include "Transceiver.h"
-
-using namespace omnetpp;
-
-class RGen : public cSimpleModule
-{
-private:
-    double _nextEventOffset;
-    cRNG *_randomGen;
-    int _defaultPacketSize;
-    Transceiver *_transcieverManager;
-protected:
-    virtual void initialize();
-    virtual void handleMessage(cMessage *msg);
-};
-
-#endif
+message ResourceAllocation {
+    int numRBsToSend;
+}

@@ -17,6 +17,8 @@
 
 #include <stdio.h>
 
+#include "../../messages/QueueControl_m.h"
+
 Define_Module(Queue);
 
 void Queue::initialize()
@@ -31,22 +33,70 @@ void Queue::handleMessage(cMessage *msg)
     }
     else if (msg->arrivedOn("request"))
     {
-        if (!_queueData.empty())
-        {
-            ResourceBlock *rb = _queueData.front();
-            _queueData.pop();
-            send(rb, "out");
-        }
+        QueueControl *req = static_cast <QueueControl *> (msg);
+        int toDequeue = req->getDequeue();
 
-        delete msg;
+        this->commandDequeue(toDequeue);
+
+        delete req;
     }
     else if (msg->arrivedOn("in"))
     {
         ResourceBlock *rb = static_cast <ResourceBlock *> (msg);
-        _queueData.push(rb);
+        this->commandQueue(&rb);
     }
     else
     {
         delete msg;
     }
+}
+
+void Queue::finish()
+{
+    while (!_queueData.empty())
+    {
+        ResourceBlock *rb = _queueData.front();
+        _queueData.pop();
+
+        delete rb;
+    }
+}
+
+int Queue::getQueueLength()
+{
+    Enter_Method("Queue::getQueueLength");
+
+    return _queueData.size();
+}
+
+int Queue::commandDequeue(int numItems)
+{
+    Enter_Method("Queue::commandDequeue");
+
+    int itemsLeft = numItems;
+    while (!_queueData.empty() && itemsLeft > 0)
+    {
+        ResourceBlock *rb = _queueData.front();
+        _queueData.pop();
+
+        drop(rb);
+        send(rb, "out");
+
+        itemsLeft--;
+    }
+
+    return numItems - itemsLeft;
+}
+
+int Queue::commandQueue(ResourceBlock **RBs, int numItems)
+{
+    Enter_Method("Queue::commandQueue");
+
+    for (int i = 0; i < numItems; i++)
+    {
+        take(RBs[i]);
+        _queueData.push(RBs[i]);
+    }
+
+    return numItems;
 }

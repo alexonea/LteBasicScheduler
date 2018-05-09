@@ -15,8 +15,6 @@
 
 package ltebasicscheduler.nodes.UE;
 
-import ltebasicscheduler.nodes.common.Transciever;
-
 module UE
 {
     gates:
@@ -27,11 +25,11 @@ module UE
         source : RGen;
         queue: Queue;
         manager : Manager;
-        transciever: Transciever;
+        transceiver: Transceiver;
 
 	connections:
-	    source.out --> transciever.dataTX;
-	    transciever.RBTX --> queue.in;
+	    source.out --> transceiver.dataTX;
+	    transceiver.RBTX --> queue.in;
 	    ctrl <--> manager.ctrl;
 	    queue.request <-- manager.queueRequest;
 	    queue.out --> data;

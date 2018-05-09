@@ -19,15 +19,12 @@
 
 
 /**
- * Class generated from <tt>messages/DataPacket.msg:19</tt> by nedtool.
+ * Class generated from <tt>messages/DataPacket.msg:17</tt> by nedtool.
  * <pre>
- * //
- * // TODO generated message class
- * //
  * packet DataPacket
  * {
  *     int senderId;
- *     unsigned char payload[1024];
+ *     int size;
  * }
  * </pre>
  */
@@ -35,7 +32,7 @@ class DataPacket : public ::omnetpp::cPacket
 {
   protected:
     int senderId;
-    unsigned char payload[1024];
+    int size;
 
   private:
     void copy(const DataPacket& other);
@@ -56,9 +53,8 @@ class DataPacket : public ::omnetpp::cPacket
     // field getter/setter methods
     virtual int getSenderId() const;
     virtual void setSenderId(int senderId);
-    virtual unsigned int getPayloadArraySize() const;
-    virtual unsigned char getPayload(unsigned int k) const;
-    virtual void setPayload(unsigned int k, unsigned char payload);
+    virtual int getSize() const;
+    virtual void setSize(int size);
 };
 
 inline void doParsimPacking(omnetpp::cCommBuffer *b, const DataPacket& obj) {obj.parsimPack(b);}

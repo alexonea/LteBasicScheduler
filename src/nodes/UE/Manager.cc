@@ -15,11 +15,18 @@
 
 #include "Manager.h"
 
+#include "../../messages/ResourceAllocation_m.h"
+#include "../../messages/QueueControl_m.h"
+
 Define_Module(Manager);
+
+int Manager::count = 0;
 
 void Manager::initialize()
 {
-    // TODO - Generated method body
+    cModule *queueModule = this->getParentModule()->getSubmodule("queue");
+    this->_id = count++;
+    this->_queueManager = check_and_cast <Queue *> (queueModule);
 }
 
 void Manager::handleMessage(cMessage *msg)
@@ -27,13 +34,30 @@ void Manager::handleMessage(cMessage *msg)
     if (msg->arrivedOn("ctrl$i"))
     {
         // message from eNodeB
-        if (strcmp(msg->getName(), "allow") == 0)
+        if (strcmp(msg->getName(), "scheduler") == 0)
         {
-            // allowance to transmit, so we transmit 1 RB
-            cMessage *req = new cMessage("dequeue 1 RB");
-            send(req, "queueRequest");
+            ResourceAllocation *ctrl = static_cast <ResourceAllocation *> (msg);
+            int allowance = ctrl->getNumRBsToSend();
 
-            delete msg;
+            /* Try communication using direct module calls */
+            if (_queueManager != nullptr)
+            {
+                _queueManager->commandDequeue(allowance);
+            }
+            /* in case of error, fall back to the default message communication */
+            else
+            {
+                QueueControl *req = new QueueControl("dequeue");
+                req->setDequeue(allowance);
+                send(req, "queueRequest");
+            }
+
+            EV << "User " << _id << " allowed to transmit " << allowance << " RBs in current scheduling cycle\n";
+            delete ctrl;
         }
+    }
+    else
+    {
+        delete msg;
     }
 }

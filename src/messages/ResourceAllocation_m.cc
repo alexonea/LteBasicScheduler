@@ -1,5 +1,5 @@
 //
-// Generated file, do not edit! Created by nedtool 5.3 from messages/DataPacket.msg.
+// Generated file, do not edit! Created by nedtool 5.3 from messages/ResourceAllocation.msg.
 //
 
 // Disable warnings about unused variables, empty switch stmts, etc:
@@ -26,7 +26,7 @@
 
 #include <iostream>
 #include <sstream>
-#include "DataPacket_m.h"
+#include "ResourceAllocation_m.h"
 
 namespace omnetpp {
 
@@ -177,78 +177,64 @@ inline std::ostream& operator<<(std::ostream& out, const std::vector<T,A>& vec)
     return out;
 }
 
-Register_Class(DataPacket)
+Register_Class(ResourceAllocation)
 
-DataPacket::DataPacket(const char *name, short kind) : ::omnetpp::cPacket(name,kind)
+ResourceAllocation::ResourceAllocation(const char *name, short kind) : ::omnetpp::cMessage(name,kind)
 {
-    this->senderId = 0;
-    this->size = 0;
+    this->numRBsToSend = 0;
 }
 
-DataPacket::DataPacket(const DataPacket& other) : ::omnetpp::cPacket(other)
+ResourceAllocation::ResourceAllocation(const ResourceAllocation& other) : ::omnetpp::cMessage(other)
 {
     copy(other);
 }
 
-DataPacket::~DataPacket()
+ResourceAllocation::~ResourceAllocation()
 {
 }
 
-DataPacket& DataPacket::operator=(const DataPacket& other)
+ResourceAllocation& ResourceAllocation::operator=(const ResourceAllocation& other)
 {
     if (this==&other) return *this;
-    ::omnetpp::cPacket::operator=(other);
+    ::omnetpp::cMessage::operator=(other);
     copy(other);
     return *this;
 }
 
-void DataPacket::copy(const DataPacket& other)
+void ResourceAllocation::copy(const ResourceAllocation& other)
 {
-    this->senderId = other.senderId;
-    this->size = other.size;
+    this->numRBsToSend = other.numRBsToSend;
 }
 
-void DataPacket::parsimPack(omnetpp::cCommBuffer *b) const
+void ResourceAllocation::parsimPack(omnetpp::cCommBuffer *b) const
 {
-    ::omnetpp::cPacket::parsimPack(b);
-    doParsimPacking(b,this->senderId);
-    doParsimPacking(b,this->size);
+    ::omnetpp::cMessage::parsimPack(b);
+    doParsimPacking(b,this->numRBsToSend);
 }
 
-void DataPacket::parsimUnpack(omnetpp::cCommBuffer *b)
+void ResourceAllocation::parsimUnpack(omnetpp::cCommBuffer *b)
 {
-    ::omnetpp::cPacket::parsimUnpack(b);
-    doParsimUnpacking(b,this->senderId);
-    doParsimUnpacking(b,this->size);
+    ::omnetpp::cMessage::parsimUnpack(b);
+    doParsimUnpacking(b,this->numRBsToSend);
 }
 
-int DataPacket::getSenderId() const
+int ResourceAllocation::getNumRBsToSend() const
 {
-    return this->senderId;
+    return this->numRBsToSend;
 }
 
-void DataPacket::setSenderId(int senderId)
+void ResourceAllocation::setNumRBsToSend(int numRBsToSend)
 {
-    this->senderId = senderId;
+    this->numRBsToSend = numRBsToSend;
 }
 
-int DataPacket::getSize() const
-{
-    return this->size;
-}
-
-void DataPacket::setSize(int size)
-{
-    this->size = size;
-}
-
-class DataPacketDescriptor : public omnetpp::cClassDescriptor
+class ResourceAllocationDescriptor : public omnetpp::cClassDescriptor
 {
   private:
     mutable const char **propertynames;
   public:
-    DataPacketDescriptor();
-    virtual ~DataPacketDescriptor();
+    ResourceAllocationDescriptor();
+    virtual ~ResourceAllocationDescriptor();
 
     virtual bool doesSupport(omnetpp::cObject *obj) const override;
     virtual const char **getPropertyNames() const override;
@@ -270,24 +256,24 @@ class DataPacketDescriptor : public omnetpp::cClassDescriptor
     virtual void *getFieldStructValuePointer(void *object, int field, int i) const override;
 };
 
-Register_ClassDescriptor(DataPacketDescriptor)
+Register_ClassDescriptor(ResourceAllocationDescriptor)
 
-DataPacketDescriptor::DataPacketDescriptor() : omnetpp::cClassDescriptor("DataPacket", "omnetpp::cPacket")
+ResourceAllocationDescriptor::ResourceAllocationDescriptor() : omnetpp::cClassDescriptor("ResourceAllocation", "omnetpp::cMessage")
 {
     propertynames = nullptr;
 }
 
-DataPacketDescriptor::~DataPacketDescriptor()
+ResourceAllocationDescriptor::~ResourceAllocationDescriptor()
 {
     delete[] propertynames;
 }
 
-bool DataPacketDescriptor::doesSupport(omnetpp::cObject *obj) const
+bool ResourceAllocationDescriptor::doesSupport(omnetpp::cObject *obj) const
 {
-    return dynamic_cast<DataPacket *>(obj)!=nullptr;
+    return dynamic_cast<ResourceAllocation *>(obj)!=nullptr;
 }
 
-const char **DataPacketDescriptor::getPropertyNames() const
+const char **ResourceAllocationDescriptor::getPropertyNames() const
 {
     if (!propertynames) {
         static const char *names[] = {  nullptr };
@@ -298,19 +284,19 @@ const char **DataPacketDescriptor::getPropertyNames() const
     return propertynames;
 }
 
-const char *DataPacketDescriptor::getProperty(const char *propertyname) const
+const char *ResourceAllocationDescriptor::getProperty(const char *propertyname) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     return basedesc ? basedesc->getProperty(propertyname) : nullptr;
 }
 
-int DataPacketDescriptor::getFieldCount() const
+int ResourceAllocationDescriptor::getFieldCount() const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? 2+basedesc->getFieldCount() : 2;
+    return basedesc ? 1+basedesc->getFieldCount() : 1;
 }
 
-unsigned int DataPacketDescriptor::getFieldTypeFlags(int field) const
+unsigned int ResourceAllocationDescriptor::getFieldTypeFlags(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -320,12 +306,11 @@ unsigned int DataPacketDescriptor::getFieldTypeFlags(int field) const
     }
     static unsigned int fieldTypeFlags[] = {
         FD_ISEDITABLE,
-        FD_ISEDITABLE,
     };
-    return (field>=0 && field<2) ? fieldTypeFlags[field] : 0;
+    return (field>=0 && field<1) ? fieldTypeFlags[field] : 0;
 }
 
-const char *DataPacketDescriptor::getFieldName(int field) const
+const char *ResourceAllocationDescriptor::getFieldName(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -334,22 +319,20 @@ const char *DataPacketDescriptor::getFieldName(int field) const
         field -= basedesc->getFieldCount();
     }
     static const char *fieldNames[] = {
-        "senderId",
-        "size",
+        "numRBsToSend",
     };
-    return (field>=0 && field<2) ? fieldNames[field] : nullptr;
+    return (field>=0 && field<1) ? fieldNames[field] : nullptr;
 }
 
-int DataPacketDescriptor::findField(const char *fieldName) const
+int ResourceAllocationDescriptor::findField(const char *fieldName) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     int base = basedesc ? basedesc->getFieldCount() : 0;
-    if (fieldName[0]=='s' && strcmp(fieldName, "senderId")==0) return base+0;
-    if (fieldName[0]=='s' && strcmp(fieldName, "size")==0) return base+1;
+    if (fieldName[0]=='n' && strcmp(fieldName, "numRBsToSend")==0) return base+0;
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
-const char *DataPacketDescriptor::getFieldTypeString(int field) const
+const char *ResourceAllocationDescriptor::getFieldTypeString(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -359,12 +342,11 @@ const char *DataPacketDescriptor::getFieldTypeString(int field) const
     }
     static const char *fieldTypeStrings[] = {
         "int",
-        "int",
     };
-    return (field>=0 && field<2) ? fieldTypeStrings[field] : nullptr;
+    return (field>=0 && field<1) ? fieldTypeStrings[field] : nullptr;
 }
 
-const char **DataPacketDescriptor::getFieldPropertyNames(int field) const
+const char **ResourceAllocationDescriptor::getFieldPropertyNames(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -377,7 +359,7 @@ const char **DataPacketDescriptor::getFieldPropertyNames(int field) const
     }
 }
 
-const char *DataPacketDescriptor::getFieldProperty(int field, const char *propertyname) const
+const char *ResourceAllocationDescriptor::getFieldProperty(int field, const char *propertyname) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -390,7 +372,7 @@ const char *DataPacketDescriptor::getFieldProperty(int field, const char *proper
     }
 }
 
-int DataPacketDescriptor::getFieldArraySize(void *object, int field) const
+int ResourceAllocationDescriptor::getFieldArraySize(void *object, int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -398,13 +380,13 @@ int DataPacketDescriptor::getFieldArraySize(void *object, int field) const
             return basedesc->getFieldArraySize(object, field);
         field -= basedesc->getFieldCount();
     }
-    DataPacket *pp = (DataPacket *)object; (void)pp;
+    ResourceAllocation *pp = (ResourceAllocation *)object; (void)pp;
     switch (field) {
         default: return 0;
     }
 }
 
-const char *DataPacketDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
+const char *ResourceAllocationDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -412,13 +394,13 @@ const char *DataPacketDescriptor::getFieldDynamicTypeString(void *object, int fi
             return basedesc->getFieldDynamicTypeString(object,field,i);
         field -= basedesc->getFieldCount();
     }
-    DataPacket *pp = (DataPacket *)object; (void)pp;
+    ResourceAllocation *pp = (ResourceAllocation *)object; (void)pp;
     switch (field) {
         default: return nullptr;
     }
 }
 
-std::string DataPacketDescriptor::getFieldValueAsString(void *object, int field, int i) const
+std::string ResourceAllocationDescriptor::getFieldValueAsString(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -426,15 +408,14 @@ std::string DataPacketDescriptor::getFieldValueAsString(void *object, int field,
             return basedesc->getFieldValueAsString(object,field,i);
         field -= basedesc->getFieldCount();
     }
-    DataPacket *pp = (DataPacket *)object; (void)pp;
+    ResourceAllocation *pp = (ResourceAllocation *)object; (void)pp;
     switch (field) {
-        case 0: return long2string(pp->getSenderId());
-        case 1: return long2string(pp->getSize());
+        case 0: return long2string(pp->getNumRBsToSend());
         default: return "";
     }
 }
 
-bool DataPacketDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
+bool ResourceAllocationDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -442,15 +423,14 @@ bool DataPacketDescriptor::setFieldValueAsString(void *object, int field, int i,
             return basedesc->setFieldValueAsString(object,field,i,value);
         field -= basedesc->getFieldCount();
     }
-    DataPacket *pp = (DataPacket *)object; (void)pp;
+    ResourceAllocation *pp = (ResourceAllocation *)object; (void)pp;
     switch (field) {
-        case 0: pp->setSenderId(string2long(value)); return true;
-        case 1: pp->setSize(string2long(value)); return true;
+        case 0: pp->setNumRBsToSend(string2long(value)); return true;
         default: return false;
     }
 }
 
-const char *DataPacketDescriptor::getFieldStructName(int field) const
+const char *ResourceAllocationDescriptor::getFieldStructName(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -463,7 +443,7 @@ const char *DataPacketDescriptor::getFieldStructName(int field) const
     };
 }
 
-void *DataPacketDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
+void *ResourceAllocationDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -471,7 +451,7 @@ void *DataPacketDescriptor::getFieldStructValuePointer(void *object, int field, 
             return basedesc->getFieldStructValuePointer(object, field, i);
         field -= basedesc->getFieldCount();
     }
-    DataPacket *pp = (DataPacket *)object; (void)pp;
+    ResourceAllocation *pp = (ResourceAllocation *)object; (void)pp;
     switch (field) {
         default: return nullptr;
     }

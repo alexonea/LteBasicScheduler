@@ -13,25 +13,16 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef __LTEBASICSCHEDULER_RGEN_H_
-#define __LTEBASICSCHEDULER_RGEN_H_
+package ltebasicscheduler.nodes.UE;
 
-#include <omnetpp.h>
-
-#include "Transceiver.h"
-
-using namespace omnetpp;
-
-class RGen : public cSimpleModule
+simple Transceiver
 {
-private:
-    double _nextEventOffset;
-    cRNG *_randomGen;
-    int _defaultPacketSize;
-    Transceiver *_transcieverManager;
-protected:
-    virtual void initialize();
-    virtual void handleMessage(cMessage *msg);
-};
-
-#endif
+    parameters:
+        bool extCP = default(false);
+        int bandwidth = default(20) @units(MHz);
+    gates:
+        output dataRX @loose;
+        input dataTX;
+        output RBTX;
+        input RBRX @loose;
+}

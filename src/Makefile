@@ -34,15 +34,21 @@ OBJS = \
     $O/nodes/UE/Manager.o \
     $O/nodes/UE/Queue.o \
     $O/nodes/UE/RGen.o \
-    $O/nodes/common/Transciever.o \
+    $O/nodes/UE/Transceiver.o \
+    $O/nodes/eNB/RoundRobinSchedulingScheme.o \
     $O/nodes/eNB/Scheduler.o \
+    $O/nodes/eNB/SchedulingDecision.o \
     $O/nodes/eNB/Sink.o \
     $O/messages/DataPacket_m.o \
+    $O/messages/QueueControl_m.o \
+    $O/messages/ResourceAllocation_m.o \
     $O/messages/ResourceBlock_m.o
 
 # Message files
 MSGFILES = \
     messages/DataPacket.msg \
+    messages/QueueControl.msg \
+    messages/ResourceAllocation.msg \
     messages/ResourceBlock.msg
 
 # SM files
