@@ -49,20 +49,6 @@ void Transciever::handleMessage(cMessage *msg)
 
         RBList = this->commandEncode(packet, totalRBs);
 
-        /* try to access the Queue module via direct call */
-        if (_queueManager != nullptr)
-        {
-            _queueManager->commandQueue(RBList, totalRBs);
-        }
-        /* if not possible, fall back to the default message communication */
-        else
-        {
-            for (int i = 0; i < totalRBs; i++)
-            {
-                send(RBList[i], "RBTX");
-            }
-        }
-
         delete packet;
     }
     else if (msg->arrivedOn("RBRX"))
@@ -85,6 +71,8 @@ void Transciever::handleMessage(cMessage *msg)
 
 ResourceBlock** Transciever::commandEncode(DataPacket *data, int &totalRBs)
 {
+    Enter_Method("Transciever::commandEncode");
+
     ResourceBlock **RBList;
     const int senderId = data->getSenderId();
     const int size = data->getSize();
@@ -103,7 +91,23 @@ ResourceBlock** Transciever::commandEncode(DataPacket *data, int &totalRBs)
     {
         RBList[i] = new ResourceBlock("RB");
         RBList[i]->setSenderId(senderId);
+
+        /* drop ownership of message */
         drop(RBList[i]);
+    }
+
+    /* try to access the Queue module via direct call */
+    if (_queueManager != nullptr)
+    {
+        _queueManager->commandQueue(RBList, totalRBs);
+    }
+    /* if not possible, fall back to the default message communication */
+    else
+    {
+        for (int i = 0; i < totalRBs; i++)
+        {
+            send(RBList[i], "RBTX");
+        }
     }
 
     return RBList;
