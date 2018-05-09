@@ -16,5 +16,5 @@
 
 packet DataPacket {
     int senderId;
-    //unsigned char payload[1024];
+    int size;
 }

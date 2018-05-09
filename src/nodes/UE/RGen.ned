@@ -18,6 +18,8 @@ package ltebasicscheduler.nodes.UE;
 
 simple RGen
 {
+    parameters:
+        int defaultPacketSize = default(1024) @units(bytes);
     gates:
         output out;
 }

@@ -24,7 +24,7 @@
  * packet DataPacket
  * {
  *     int senderId;
- *     //unsigned char payload[1024];
+ *     int size;
  * }
  * </pre>
  */
@@ -32,6 +32,7 @@ class DataPacket : public ::omnetpp::cPacket
 {
   protected:
     int senderId;
+    int size;
 
   private:
     void copy(const DataPacket& other);
@@ -52,6 +53,8 @@ class DataPacket : public ::omnetpp::cPacket
     // field getter/setter methods
     virtual int getSenderId() const;
     virtual void setSenderId(int senderId);
+    virtual int getSize() const;
+    virtual void setSize(int size);
 };
 
 inline void doParsimPacking(omnetpp::cCommBuffer *b, const DataPacket& obj) {obj.parsimPack(b);}

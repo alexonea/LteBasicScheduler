@@ -24,7 +24,7 @@ Define_Module(RGen);
 
 void RGen::initialize()
 {
-
+    this->_defaultPacketSize = par("defaultPacketSize");
     this->_randomGen = this->getRNG(0);
     this->_nextEventOffset = _randomGen->doubleRand();
 
@@ -37,6 +37,12 @@ void RGen::handleMessage(cMessage *msg)
     if (msg->isSelfMessage())
     {
         DataPacket *dp = new DataPacket("data");
+        dp->setSize(_defaultPacketSize);
+
+        /*
+         * We must also set the sender ID here, for now it is not set
+         */
+
         send(dp, "out");
 
         this->_nextEventOffset = _randomGen->doubleRand();

@@ -18,6 +18,9 @@
 
 #include <omnetpp.h>
 
+#include "../../messages/DataPacket_m.h"
+#include "../../messages/ResourceBlock_m.h"
+
 using namespace omnetpp;
 
 class Transciever : public cSimpleModule
@@ -28,6 +31,8 @@ private:
 protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
+public:
+    ResourceBlock** commandEncode(DataPacket *data, int &totalRBs);
 };
 
 #endif

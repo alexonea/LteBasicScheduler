@@ -15,9 +15,6 @@
 
 #include "Transciever.h"
 
-#include "../../messages/DataPacket_m.h"
-#include "../../messages/ResourceBlock_m.h"
-
 #define RE_PER_RB 12
 #define QPSK 0
 #define QAM16 1
@@ -43,19 +40,16 @@ void Transciever::handleMessage(cMessage *msg)
     }
     else if (msg->arrivedOn("dataTX"))
     {
-        // message for uplink channel (use QPSK)
+        ResourceBlock **RBList;
         DataPacket *packet = static_cast <DataPacket *> (msg);
-        const int bitsPerRB = RE_PER_RB * _symbolsPerRE * BITS_PER_SYMBOL[QPSK];
-        const int totalBits = PACKET_SIZE * 8; // 8 bits per byte
-        const int totalRBs = 1 + ((totalBits - 1) / bitsPerRB); // round up
-        const int senderId = packet->getSenderId();
+        int totalRBs;
 
-        // send all the RBs to the queue
+        RBList = this->commandEncode(packet, totalRBs);
+        EV << "Total RBs " << totalRBs << endl;
+
         for (int i = 0; i < totalRBs; i++)
         {
-            ResourceBlock *rb = new ResourceBlock("RB");
-            rb->setSenderId(senderId);
-            send(rb, "RBTX");
+            send(RBList[i], "RBTX");
         }
 
         delete packet;
@@ -66,4 +60,29 @@ void Transciever::handleMessage(cMessage *msg)
         // temporarily delete the message
         delete msg;
     }
+}
+
+ResourceBlock** Transciever::commandEncode(DataPacket *data, int &totalRBs)
+{
+    ResourceBlock **RBList;
+    const int senderId = data->getSenderId();
+    const int size = data->getSize();
+
+    /* for now we use QPSK for both UL and DL */
+    const int bitsPerRB = RE_PER_RB * _symbolsPerRE * BITS_PER_SYMBOL[QPSK];
+
+    /* 8 bits per byte of data */
+    const int totalBits = size * 8;
+
+    /* round up to an integer number of RBs */
+    totalRBs = 1 + ((totalBits - 1) / bitsPerRB);
+
+    RBList = new ResourceBlock*[totalRBs];
+    for (int i = 0; i < totalRBs; i++)
+    {
+        RBList[i] = new ResourceBlock("RB");
+        RBList[i]->setSenderId(senderId);
+    }
+
+    return RBList;
 }
