@@ -18,6 +18,8 @@
 
 #include <omnetpp.h>
 
+#include "Transciever.h"
+
 using namespace omnetpp;
 
 class RGen : public cSimpleModule
@@ -26,6 +28,7 @@ private:
     double _nextEventOffset;
     cRNG *_randomGen;
     int _defaultPacketSize;
+    Transciever *_transcieverManager;
 protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);

@@ -24,9 +24,12 @@ Define_Module(RGen);
 
 void RGen::initialize()
 {
+    cModule *transcieverModule = this->getParentModule()->getSubmodule("transciever");
     this->_defaultPacketSize = par("defaultPacketSize");
     this->_randomGen = this->getRNG(0);
     this->_nextEventOffset = _randomGen->doubleRand();
+
+    this->_transcieverManager = check_and_cast <Transciever *> (transcieverModule);
 
     cMessage *notification = new cMessage("notification");
     scheduleAt(simTime() + _nextEventOffset, notification);
@@ -43,7 +46,17 @@ void RGen::handleMessage(cMessage *msg)
          * We must also set the sender ID here, for now it is not set
          */
 
-        send(dp, "out");
+        /* try using direct call, otherwise use default message communication */
+        if (_transcieverManager != nullptr)
+        {
+            int totalRBs;
+            (void) _transcieverManager->commandEncode(dp, totalRBs);
+            (void) totalRBs;
+        }
+        else
+        {
+            send(dp, "out");
+        }
 
         this->_nextEventOffset = _randomGen->doubleRand();
         scheduleAt(simTime() + _nextEventOffset, msg);
