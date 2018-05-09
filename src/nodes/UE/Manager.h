@@ -18,6 +18,8 @@
 
 #include <omnetpp.h>
 
+#include "Queue.h"
+
 using namespace omnetpp;
 
 class Manager : public cSimpleModule
@@ -28,6 +30,7 @@ protected:
 private:
     static int count;
     int _id;
+    Queue *_queueManager;
 };
 
 #endif

@@ -24,7 +24,9 @@ int Manager::count = 0;
 
 void Manager::initialize()
 {
+    cModule *queueModule = this->getParentModule()->getSubmodule("queue");
     this->_id = count++;
+    this->_queueManager = check_and_cast <Queue *> (queueModule);
 }
 
 void Manager::handleMessage(cMessage *msg)
@@ -35,13 +37,22 @@ void Manager::handleMessage(cMessage *msg)
         if (strcmp(msg->getName(), "scheduler") == 0)
         {
             ResourceAllocation *ctrl = static_cast <ResourceAllocation *> (msg);
-            QueueControl *req = new QueueControl("dequeue");
             int allowance = ctrl->getNumRBsToSend();
 
-            req->setDequeue(allowance);
-            EV << "User " << _id << " allowed to transmit " << allowance << " RBs in current scheduling cycle\n";
+            /* Try communication using direct module calls */
+            if (_queueManager != nullptr)
+            {
+                _queueManager->commandDequeue(allowance);
+            }
+            /* in case of error, fall back to the default message communication */
+            else
+            {
+                QueueControl *req = new QueueControl("dequeue");
+                req->setDequeue(allowance);
+                send(req, "queueRequest");
+            }
 
-            send(req, "queueRequest");
+            EV << "User " << _id << " allowed to transmit " << allowance << " RBs in current scheduling cycle\n";
             delete ctrl;
         }
     }

@@ -43,7 +43,7 @@ void Queue::handleMessage(cMessage *msg)
     else if (msg->arrivedOn("in"))
     {
         ResourceBlock *rb = static_cast <ResourceBlock *> (msg);
-        this->commandQueue(rb);
+        this->commandQueue(&rb);
     }
     else
     {
@@ -82,7 +82,7 @@ int Queue::commandDequeue(int numItems)
     return numItems - itemsLeft;
 }
 
-int Queue::commandQueue(ResourceBlock *RBs, int numItems = 1)
+int Queue::commandQueue(ResourceBlock **RBs, int numItems)
 {
     for (int i = 0; i < numItems; i++)
     {

@@ -29,7 +29,7 @@ class Queue : public cSimpleModule
 public:
     int getQueueLength();
     int commandDequeue(int numItems);
-    int commandQueue(ResourceBlock *RBs, int numItems = 1);
+    int commandQueue(ResourceBlock **RBs, int numItems = 1);
 private:
     std::queue<ResourceBlock *> _queueData;
 protected:
