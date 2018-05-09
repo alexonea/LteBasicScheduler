@@ -48,8 +48,6 @@ void Transciever::handleMessage(cMessage *msg)
         int totalRBs;
 
         RBList = this->commandEncode(packet, totalRBs);
-
-        delete packet;
     }
     else if (msg->arrivedOn("RBRX"))
     {
@@ -110,5 +108,6 @@ ResourceBlock** Transciever::commandEncode(DataPacket *data, int &totalRBs)
         }
     }
 
+    delete data;
     return RBList;
 }
