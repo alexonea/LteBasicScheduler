@@ -13,7 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package ltebasicscheduler.nodes.common;
+package ltebasicscheduler.nodes.UE;
 
 simple Transciever
 {

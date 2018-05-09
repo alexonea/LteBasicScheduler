@@ -15,8 +15,6 @@
 
 package ltebasicscheduler.nodes.UE;
 
-import ltebasicscheduler.nodes.common.Transciever;
-
 module UE
 {
     gates:
