@@ -44,9 +44,6 @@ void Queue::handleMessage(cMessage *msg)
     {
         ResourceBlock *rb = static_cast <ResourceBlock *> (msg);
         _queueData.push(rb);
-
-        cDisplayString &str = this->getParentModule()->getDisplayString();
-        str.set("a");
     }
     else
     {
