@@ -64,16 +64,22 @@ void Queue::finish()
 
 int Queue::getQueueLength()
 {
+    Enter_Method("Queue::getQueueLength");
+
     return _queueData.size();
 }
 
 int Queue::commandDequeue(int numItems)
 {
+    Enter_Method("Queue::commandDequeue");
+
     int itemsLeft = numItems;
     while (!_queueData.empty() && itemsLeft > 0)
     {
         ResourceBlock *rb = _queueData.front();
         _queueData.pop();
+
+        drop(rb);
         send(rb, "out");
 
         itemsLeft--;
@@ -84,8 +90,11 @@ int Queue::commandDequeue(int numItems)
 
 int Queue::commandQueue(ResourceBlock **RBs, int numItems)
 {
+    Enter_Method("Queue::commandQueue");
+
     for (int i = 0; i < numItems; i++)
     {
+        take(RBs[i]);
         _queueData.push(RBs[i]);
     }
 

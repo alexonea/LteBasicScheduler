@@ -28,36 +28,57 @@ Define_Module(Transciever);
 
 void Transciever::initialize()
 {
+    cModule *queueModule = this->getParentModule()->getSubmodule("queue");
+    this->_queueManager = check_and_cast <Queue *> (queueModule);
+
     this->_bandwidth = par("bandwidth");
     this->_symbolsPerRE = par("extCP") ? 6 : 7;
 }
 
 void Transciever::handleMessage(cMessage *msg)
 {
-    if (msg->isSelfMessage())
+    if (msg->arrivedOn("dataTX"))
     {
-        delete msg;
-    }
-    else if (msg->arrivedOn("dataTX"))
-    {
+        /*
+         * UL channel transmission
+         */
+
         ResourceBlock **RBList;
         DataPacket *packet = static_cast <DataPacket *> (msg);
         int totalRBs;
 
         RBList = this->commandEncode(packet, totalRBs);
-        EV << "Total RBs " << totalRBs << endl;
 
-        for (int i = 0; i < totalRBs; i++)
+        /* try to access the Queue module via direct call */
+        if (_queueManager != nullptr)
         {
-            send(RBList[i], "RBTX");
+            _queueManager->commandQueue(RBList, totalRBs);
+        }
+        /* if not possible, fall back to the default message communication */
+        else
+        {
+            for (int i = 0; i < totalRBs; i++)
+            {
+                send(RBList[i], "RBTX");
+            }
         }
 
         delete packet;
     }
     else if (msg->arrivedOn("RBRX"))
     {
-        // message from downlink channel
-        // temporarily delete the message
+        /*
+         * DL channel currently not implemented
+         */
+
+        delete msg;
+    }
+    else
+    {
+        /*
+         * Get rid of any other message
+         */
+
         delete msg;
     }
 }
@@ -82,6 +103,7 @@ ResourceBlock** Transciever::commandEncode(DataPacket *data, int &totalRBs)
     {
         RBList[i] = new ResourceBlock("RB");
         RBList[i]->setSenderId(senderId);
+        drop(RBList[i]);
     }
 
     return RBList;
