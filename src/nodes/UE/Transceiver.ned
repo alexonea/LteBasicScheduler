@@ -13,28 +13,16 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef __LTEBASICSCHEDULER_TRANSCIEVER_H_
-#define __LTEBASICSCHEDULER_TRANSCIEVER_H_
+package ltebasicscheduler.nodes.UE;
 
-#include <omnetpp.h>
-
-#include "Queue.h"
-#include "../../messages/DataPacket_m.h"
-#include "../../messages/ResourceBlock_m.h"
-
-using namespace omnetpp;
-
-class Transciever : public cSimpleModule
+simple Transceiver
 {
-private:
-    int _symbolsPerRE;
-    int _bandwidth;
-    Queue *_queueManager;
-protected:
-    virtual void initialize();
-    virtual void handleMessage(cMessage *msg);
-public:
-    ResourceBlock** commandEncode(DataPacket *data, int &totalRBs);
-};
-
-#endif
+    parameters:
+        bool extCP = default(false);
+        int bandwidth = default(20) @units(MHz);
+    gates:
+        output dataRX @loose;
+        input dataTX;
+        output RBTX;
+        input RBRX @loose;
+}

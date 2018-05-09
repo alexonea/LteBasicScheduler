@@ -18,7 +18,7 @@
 
 #include <omnetpp.h>
 
-#include "Transciever.h"
+#include "Transceiver.h"
 
 using namespace omnetpp;
 
@@ -28,7 +28,7 @@ private:
     double _nextEventOffset;
     cRNG *_randomGen;
     int _defaultPacketSize;
-    Transciever *_transcieverManager;
+    Transceiver *_transcieverManager;
 protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);

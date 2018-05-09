@@ -24,12 +24,12 @@ Define_Module(RGen);
 
 void RGen::initialize()
 {
-    cModule *transcieverModule = this->getParentModule()->getSubmodule("transciever");
+    cModule *transcieverModule = this->getParentModule()->getSubmodule("transceiver");
     this->_defaultPacketSize = par("defaultPacketSize");
     this->_randomGen = this->getRNG(0);
     this->_nextEventOffset = _randomGen->doubleRand();
 
-    this->_transcieverManager = check_and_cast <Transciever *> (transcieverModule);
+    this->_transcieverManager = check_and_cast <Transceiver *> (transcieverModule);
 
     cMessage *notification = new cMessage("notification");
     scheduleAt(simTime() + _nextEventOffset, notification);

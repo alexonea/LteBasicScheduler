@@ -13,7 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include "Transciever.h"
+#include "Transceiver.h"
 
 #define RE_PER_RB 12
 #define QPSK 0
@@ -24,9 +24,9 @@
 
 static const int BITS_PER_SYMBOL[3] = { 2, 4, 6 };
 
-Define_Module(Transciever);
+Define_Module(Transceiver);
 
-void Transciever::initialize()
+void Transceiver::initialize()
 {
     cModule *queueModule = this->getParentModule()->getSubmodule("queue");
     this->_queueManager = check_and_cast <Queue *> (queueModule);
@@ -35,7 +35,7 @@ void Transciever::initialize()
     this->_symbolsPerRE = par("extCP") ? 6 : 7;
 }
 
-void Transciever::handleMessage(cMessage *msg)
+void Transceiver::handleMessage(cMessage *msg)
 {
     if (msg->arrivedOn("dataTX"))
     {
@@ -67,9 +67,9 @@ void Transciever::handleMessage(cMessage *msg)
     }
 }
 
-ResourceBlock** Transciever::commandEncode(DataPacket *data, int &totalRBs)
+ResourceBlock** Transceiver::commandEncode(DataPacket *data, int &totalRBs)
 {
-    Enter_Method("Transciever::commandEncode");
+    Enter_Method("Transceiver::commandEncode");
 
     ResourceBlock **RBList;
     const int senderId = data->getSenderId();
