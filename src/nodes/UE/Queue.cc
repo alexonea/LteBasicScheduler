@@ -36,24 +36,14 @@ void Queue::handleMessage(cMessage *msg)
         QueueControl *req = static_cast <QueueControl *> (msg);
         int toDequeue = req->getDequeue();
 
-        while (!_queueData.empty() && toDequeue > 0)
-        {
-            ResourceBlock *rb = _queueData.front();
-            _queueData.pop();
-            send(rb, "out");
-
-            toDequeue--;
-        }
+        this->commandDequeue(toDequeue);
 
         delete req;
     }
     else if (msg->arrivedOn("in"))
     {
         ResourceBlock *rb = static_cast <ResourceBlock *> (msg);
-        _queueData.push(rb);
-
-        cDisplayString &str = this->getParentModule()->getDisplayString();
-        str.set("a");
+        this->commandQueue(rb);
     }
     else
     {
@@ -70,4 +60,34 @@ void Queue::finish()
 
         delete rb;
     }
+}
+
+int Queue::getQueueLength()
+{
+    return _queueData.size();
+}
+
+int Queue::commandDequeue(int numItems)
+{
+    int itemsLeft = numItems;
+    while (!_queueData.empty() && itemsLeft > 0)
+    {
+        ResourceBlock *rb = _queueData.front();
+        _queueData.pop();
+        send(rb, "out");
+
+        itemsLeft--;
+    }
+
+    return numItems - itemsLeft;
+}
+
+int Queue::commandQueue(ResourceBlock *RBs, int numItems = 1)
+{
+    for (int i = 0; i < numItems; i++)
+    {
+        _queueData.push(RBs[i]);
+    }
+
+    return numItems;
 }
