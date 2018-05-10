@@ -1,7 +1,5 @@
 language: cpp
 sudo: required
-services:
-  - docker
 before_install:
   - wget --no-check-certificate https://omnetpp.org/omnetpp/send/30-omnet-releases/2321-omnetpp-5-2-1-linux --referer=https://omnetpp.org/omnetpp -O omnetpp-5.2.1.tgz --progress=dot:giga; exit 0
   - tar xf omnetpp-5.2.1.tgz && \
