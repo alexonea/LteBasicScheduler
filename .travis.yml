@@ -5,7 +5,7 @@ cache:
     - $HOME/deps
 before_install:
   - wget --no-check-certificate https://www.omnetpp.org/omnetpp/send/30-omnet-releases/2327-omnetpp-5-3-core --referer=https://omnetpp.org/omnetpp -O $HOME/deps/omnetpp-5.3-core.tgz --progress=dot:giga
-  - tar xf $HOME/desp/omnetpp-5.3-core.tgz && rm $HOME/deps/omnetpp-5.3-core.tgz
+  - tar xf $HOME/deps/omnetpp-5.3-core.tgz
   - cd $HOME/omnetpp-5.3-core && ls -lah
   - echo "CFLAGS_RELEASE='-O3 -DNDEBUG=1 -D_XOPEN_SOURCE'" >> configure.user && echo "CXXFLAGS='-std=c++14'" >> configure.user && sed -i 's/PREFER_CLANG=yes/PREFER_CLANG=no/g' configure.user
   - export PATH=$HOME/omnetpp-5.3-core/bin:$PATH
