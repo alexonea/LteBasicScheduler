@@ -2,7 +2,7 @@ language: cpp
 sudo: required
 cache:
   directories:
-    - $HOME/omnetpp-5.2.1
+    - $HOME/omnetpp-5.2.1.tgz
 before_install:
   - wget --no-check-certificate https://omnetpp.org/omnetpp/send/30-omnet-releases/2321-omnetpp-5-2-1-linux --referer=https://omnetpp.org/omnetpp -O $HOME/omnetpp-5.2.1.tgz --progress=dot:giga
   - tar xf $HOME/omnetpp-5.2.1.tgz && rm $HOME/omnetpp-5.2.1.tgz
