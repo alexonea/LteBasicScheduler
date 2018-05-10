@@ -1,5 +1,9 @@
 language: cpp
 sudo: required
+addons:
+  apt:
+    packages:
+      - g++-5
 cache:
   directories:
     - $HOME/deps
