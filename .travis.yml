@@ -2,6 +2,8 @@ language: cpp
 sudo: required
 addons:
   apt:
+    config:
+      retries: true
     packages:
       - g++-5
 cache:
