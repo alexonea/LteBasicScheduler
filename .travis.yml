@@ -4,6 +4,5 @@ services:
   - docker
 before_install:
   - git clone https://github.com/omnetpp/dockerfiles.git
-  - cd dockerfiles && ./build-omnetpp
-  - cd ..
+  - ./dockerfiles/build-omnetpp
 script: make
