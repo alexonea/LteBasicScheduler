@@ -4,7 +4,7 @@ cache:
   directories:
     - $HOME/omnetpp-5.2.1
 before_install:
-  - wget --no-check-certificate https://omnetpp.org/omnetpp/send/30-omnet-releases/2321-omnetpp-5-2-1-linux --referer=https://omnetpp.org/omnetpp -O omnetpp-5.2.1.tgz --progress=dot:giga; exit 0
+  - wget --no-check-certificate https://omnetpp.org/omnetpp/send/30-omnet-releases/2321-omnetpp-5-2-1-linux --referer=https://omnetpp.org/omnetpp -O omnetpp-5.2.1.tgz --progress=dot:giga
   - tar xf omnetpp-5.2.1.tgz && \
     rm omnetpp-5.2.1.tgz
   - cd omnetpp-5.2.1
