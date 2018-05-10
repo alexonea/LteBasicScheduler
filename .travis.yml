@@ -4,5 +4,5 @@ services:
   - docker
 before_install:
   - git clone https://github.com/omnetpp/dockerfiles.git
-  - ./dockerfiles/build-omnetpp
+  - docker build -t dockerfiles/travis-base
 script: make
