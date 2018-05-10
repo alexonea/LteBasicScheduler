@@ -1,5 +1,9 @@
 language: generic
 sudo: required
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
 cache:
   directories:
     - $HOME/deps
