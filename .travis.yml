@@ -3,6 +3,15 @@ sudo: required
 services:
   - docker
 before_install:
-  - git clone https://github.com/omnetpp/dockerfiles.git
-  - docker build -t dockerfiles/travis-base
+  - wget --no-check-certificate https://omnetpp.org/omnetpp/send/30-omnet-releases/2321-omnetpp-5-2-1-linux --referer=https://omnetpp.org/omnetpp -O omnetpp-5.2.1.tgz --progress=dot:giga; exit 0
+  - tar xf omnetpp-5.2.1.tgz && \
+    rm omnetpp-5.2.1.tgz
+  - cd omnetpp-5.2.1
+  - echo "CFLAGS_RELEASE='-O3 -DNDEBUG=1 -D_XOPEN_SOURCE'" >> configure.user && \
+    echo "CXXFLAGS='-std=c++14'" >> configure.user && \
+    sed -i 's/PREFER_CLANG=yes/PREFER_CLANG=no/g' configure.user
+  - export PATH=`cwd`/bin:$PATH
+  - export LD_LIBRARY_PATH=`cwd`/lib:$LD_LIBRARY_PATH
+  - ./configure WITH_TKENV=no WITH_QTENV=no WITH_OSG=no WITH_OSGEARTH=no && \
+    make -j $(nproc) MODE=release VERBOSE=1
 script: make
