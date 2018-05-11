@@ -92,6 +92,9 @@ int Queue::commandQueue(ResourceBlock **RBs, int numItems)
 {
     Enter_Method("Queue::commandQueue");
 
+    if (_queueData.size() > 1000)
+        return 0;
+
     for (int i = 0; i < numItems; i++)
     {
         take(RBs[i]);

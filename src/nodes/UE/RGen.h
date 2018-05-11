@@ -26,7 +26,6 @@ class RGen : public cSimpleModule
 {
 private:
     double _nextEventOffset;
-    cRNG *_randomGen;
     int _defaultPacketSize;
     Transceiver *_transcieverManager;
 protected:
