@@ -13,7 +13,7 @@ before_install:
   - sudo unlink /usr/bin/gcc && sudo ln -s /usr/bin/gcc-5 /usr/bin/gcc
   - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 90
   - gcc --version
-  - wget --no-check-certificate https://www.omnetpp.org/omnetpp/send/30-omnet-releases/2327-omnetpp-5-3-core --referer=https://omnetpp.org/omnetpp -O $HOME/deps/omnetpp-5.3-core.tgz --progress=dot:giga
+  - if [ ! -f $HOME/deps/omnetpp-5.3-core.tgz ]; then wget --no-check-certificate https://www.omnetpp.org/omnetpp/send/30-omnet-releases/2327-omnetpp-5-3-core --referer=https://omnetpp.org/omnetpp -O $HOME/deps/omnetpp-5.3-core.tgz --progress=dot:giga; fi
   - tar xf $HOME/deps/omnetpp-5.3-core.tgz -C $HOME
   - cd $HOME/omnetpp-5.3 && ls -lah
   - echo "CFLAGS_RELEASE='-O3 -DNDEBUG=1 -D_XOPEN_SOURCE'" >> configure.user && echo "CXXFLAGS='-std=c++14'" >> configure.user && sed -i 's/PREFER_CLANG=yes/PREFER_CLANG=no/g' configure.user
