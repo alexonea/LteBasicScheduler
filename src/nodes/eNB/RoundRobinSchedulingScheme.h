@@ -17,14 +17,15 @@
 #define NODES_ENB_ROUNDROBINSCHEDULINGSCHEME_H_
 
 #include "SchedulingDecision.h"
+#include "SchedulingScheme.h"
 
-class RoundRobinSchedulingScheme
+class RoundRobinSchedulingScheme : public SchedulingScheme
 {
 public:
     RoundRobinSchedulingScheme(int numUsers);
     virtual ~RoundRobinSchedulingScheme();
 
-    SchedulingDecision* schedule();
+    virtual SchedulingDecision* schedule() override;
 private:
     int _numUsers;
     int _numRBs;

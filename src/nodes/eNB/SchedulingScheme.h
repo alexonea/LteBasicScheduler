@@ -13,25 +13,18 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef __LTEBASICSCHEDULER_SCHEDULER_H_
-#define __LTEBASICSCHEDULER_SCHEDULER_H_
+#ifndef NODES_ENB_SCHEDULINGSCHEME_H_
+#define NODES_ENB_SCHEDULINGSCHEME_H_
 
-#include <omnetpp.h>
+#include "SchedulingDecision.h"
 
-#include "SchedulingScheme.h"
-
-using namespace omnetpp;
-
-class Scheduler : public cSimpleModule
+class SchedulingScheme
 {
-private:
-    double _schedCycle;
-    int _numConnections;
-    SchedulingScheme *_schedulingScheme;
-protected:
-    virtual void initialize();
-    virtual void handleMessage(cMessage *msg);
-    virtual void finish();
+public:
+    SchedulingScheme();
+    virtual ~SchedulingScheme();
+
+    virtual SchedulingDecision* schedule() = 0;
 };
 
-#endif
+#endif /* NODES_ENB_SCHEDULINGSCHEME_H_ */

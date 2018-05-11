@@ -16,6 +16,7 @@
 #include "Scheduler.h"
 
 #include "../../messages/ResourceAllocation_m.h"
+#include "RoundRobinSchedulingScheme.h"
 
 Define_Module(Scheduler);
 
