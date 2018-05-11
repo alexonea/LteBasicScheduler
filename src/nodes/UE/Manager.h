@@ -18,15 +18,18 @@
 
 #include <omnetpp.h>
 
+#include "../common/UserInformationInterface.h"
 #include "Queue.h"
 
 using namespace omnetpp;
 
-class Manager : public cSimpleModule
+class Manager : public cSimpleModule, public UserInformationInterface
 {
+public:
+    virtual long int commandReadUserQueueLength() override;
 protected:
-    virtual void initialize();
-    virtual void handleMessage(cMessage *msg);
+    virtual void initialize() override;
+    virtual void handleMessage(cMessage *msg) override;
 private:
     static int count;
     int _id;

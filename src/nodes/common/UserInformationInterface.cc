@@ -13,27 +13,14 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef NODES_ENB_SCHEDULINGUSERALLOCATION_H_
-#define NODES_ENB_SCHEDULINGUSERALLOCATION_H_
+#include "UserInformationInterface.h"
 
-#include <vector>
-
-typedef struct _RBAllocation
+UserInformationInterface::UserInformationInterface()
 {
-    int RB;
-    int timeslot;
-} RBAllocation;
+    // TODO Auto-generated constructor stub
+}
 
-typedef struct _SchUserAllocation
+UserInformationInterface::~UserInformationInterface()
 {
-    int count;
-    std::vector<RBAllocation> RBs;
-
-    _SchUserAllocation()
-    {
-        count = 0;
-        RBs = std::vector<RBAllocation>();
-    }
-} SchUserAllocation;
-
-#endif /* NODES_ENB_SCHEDULINGUSERALLOCATION_H_ */
+    // TODO Auto-generated destructor stub
+}

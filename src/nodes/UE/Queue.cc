@@ -62,9 +62,9 @@ void Queue::finish()
     }
 }
 
-int Queue::getQueueLength()
+int Queue::commandReadQueueLength()
 {
-    Enter_Method("Queue::getQueueLength");
+    Enter_Method("Queue::commandReadQueueLength");
 
     return _queueData.size();
 }

@@ -61,3 +61,13 @@ void Manager::handleMessage(cMessage *msg)
         delete msg;
     }
 }
+
+long int Manager::commandReadUserQueueLength()
+{
+    Enter_Method_Silent();
+
+    if (_queueManager != nullptr)
+        return _queueManager->commandReadQueueLength();
+    else
+        return USER_QUEUE_LENGTH_NA;
+}

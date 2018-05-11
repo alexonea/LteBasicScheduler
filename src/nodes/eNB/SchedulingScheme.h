@@ -16,6 +16,8 @@
 #ifndef NODES_ENB_SCHEDULINGSCHEME_H_
 #define NODES_ENB_SCHEDULINGSCHEME_H_
 
+#include "../common/UserInformationInterface.h"
+
 #include "SchedulingDecision.h"
 
 class SchedulingScheme
@@ -24,7 +26,7 @@ public:
     SchedulingScheme();
     virtual ~SchedulingScheme();
 
-    virtual SchedulingDecision* schedule() = 0;
+    virtual SchedulingDecision* schedule(int numUsers, UserInformation *userInfo) = 0;
 };
 
 #endif /* NODES_ENB_SCHEDULINGSCHEME_H_ */

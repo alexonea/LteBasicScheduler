@@ -25,7 +25,17 @@ void Scheduler::initialize()
     this->_schedCycle = par("schedCycle");
     this->_numConnections = par("size");
 
-    this->_schedulingScheme = new RoundRobinSchedulingScheme(_numConnections);
+    this->_schedulingScheme = new RoundRobinSchedulingScheme();
+    this->_userQueueLength = new UserInformation[_numConnections]();
+    this->_userQueueManager = new UserInformationInterface*[_numConnections];
+
+    for (int i = 0; i < _numConnections; i++)
+    {
+        char path[128];
+        sprintf(path, "BasicNetwork.n[%d].manager", i);
+        cModule *userQueueManager = this->getModuleByPath(path);
+        _userQueueManager[i] = check_and_cast <UserInformationInterface*> (userQueueManager);
+    }
 
     cMessage *notification = new cMessage("scheduler");
     scheduleAt(simTime() + _schedCycle, notification);
@@ -35,15 +45,40 @@ void Scheduler::handleMessage(cMessage *msg)
 {
     if (msg->isSelfMessage())
     {
-        SchedulingDecision *decision = _schedulingScheme->schedule();
+        /* Read the user queue length */
         for (int i = 0; i < _numConnections; i++)
         {
-            ResourceAllocation *ctrl = new ResourceAllocation("scheduler");
-            ctrl->setNumRBsToSend(decision->getAllocationForUser(i).count);
+            /* Try to read the user queue length, otherwise set it to N/A */
+            if (_userQueueManager[i] != nullptr)
+            {
+                _userQueueLength[i].queueLength = _userQueueManager[i]->commandReadUserQueueLength();
+            }
+            else
+            {
+                _userQueueLength[i].queueLength = USER_QUEUE_LENGTH_NA;
+            }
 
-            send(ctrl, this->gate("ctrl$o", i));
+            EV << "Queue length for user " << i << ": " << _userQueueLength[i].queueLength << endl;
         }
 
+        SchedulingDecision *decision = _schedulingScheme->schedule(_numConnections, _userQueueLength);
+        if (decision != nullptr)
+        {
+            for (int i = 0; i < _numConnections; i++)
+            {
+                int toSend = decision->getAllocationForUser(i).count;
+                if (toSend != 0)
+                {
+                    ResourceAllocation *ctrl = new ResourceAllocation("scheduler");
+                    ctrl->setNumRBsToSend(toSend);
+
+                    send(ctrl, this->gate("ctrl$o", i));
+                }
+            }
+
+        }
+
+        delete decision;
         scheduleAt(simTime() + _schedCycle, msg);
     }
 }

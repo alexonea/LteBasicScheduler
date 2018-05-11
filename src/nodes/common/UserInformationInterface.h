@@ -13,27 +13,27 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef NODES_ENB_SCHEDULINGUSERALLOCATION_H_
-#define NODES_ENB_SCHEDULINGUSERALLOCATION_H_
+#ifndef NODES_COMMON_USERINFORMATIONINTERFACE_H_
+#define NODES_COMMON_USERINFORMATIONINTERFACE_H_
 
-#include <vector>
+#define USER_QUEUE_LENGTH_NA -1
 
-typedef struct _RBAllocation
+#include <omnetpp.h>
+
+using namespace omnetpp;
+
+typedef struct _UserInformation
 {
-    int RB;
-    int timeslot;
-} RBAllocation;
+    long int queueLength;
+} UserInformation;
 
-typedef struct _SchUserAllocation
+class UserInformationInterface
 {
-    int count;
-    std::vector<RBAllocation> RBs;
+public:
+    UserInformationInterface();
+    virtual ~UserInformationInterface();
 
-    _SchUserAllocation()
-    {
-        count = 0;
-        RBs = std::vector<RBAllocation>();
-    }
-} SchUserAllocation;
+    virtual long int commandReadUserQueueLength() = 0;
+};
 
-#endif /* NODES_ENB_SCHEDULINGUSERALLOCATION_H_ */
+#endif /* NODES_COMMON_USERINFORMATIONINTERFACE_H_ */

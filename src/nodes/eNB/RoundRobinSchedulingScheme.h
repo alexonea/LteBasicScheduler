@@ -19,15 +19,18 @@
 #include "SchedulingDecision.h"
 #include "SchedulingScheme.h"
 
+#include "../common/UserInformationInterface.h"
+
 class RoundRobinSchedulingScheme : public SchedulingScheme
 {
 public:
-    RoundRobinSchedulingScheme(int numUsers);
+    RoundRobinSchedulingScheme();
     virtual ~RoundRobinSchedulingScheme();
 
-    virtual SchedulingDecision* schedule() override;
+    virtual SchedulingDecision* schedule(int numUsers, UserInformation *userInfo) override;
 private:
-    int _numUsers;
+    static int _findNextUser(int currentUserId, int numUsers, UserInformation *userInfo);
+
     int _numRBs;
     int _fixedAllocationSize;
     int *_schedTable;
