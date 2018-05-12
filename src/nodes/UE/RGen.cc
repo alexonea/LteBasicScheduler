@@ -26,8 +26,7 @@ void RGen::initialize()
 {
     cModule *transcieverModule = this->getParentModule()->getSubmodule("transceiver");
     this->_defaultPacketSize = par("defaultPacketSize");
-    this->_randomGen = this->getRNG(0);
-    this->_nextEventOffset = _randomGen->doubleRand();
+    this->_nextEventOffset = par("nextEventOffset");
 
     this->_transcieverManager = check_and_cast <Transceiver *> (transcieverModule);
 
@@ -58,7 +57,7 @@ void RGen::handleMessage(cMessage *msg)
             send(dp, "out");
         }
 
-        this->_nextEventOffset = _randomGen->doubleRand();
+        this->_nextEventOffset = par("nextEventOffset");
         scheduleAt(simTime() + _nextEventOffset, msg);
     }
 }

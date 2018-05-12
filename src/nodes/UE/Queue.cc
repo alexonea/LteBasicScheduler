@@ -62,9 +62,9 @@ void Queue::finish()
     }
 }
 
-int Queue::getQueueLength()
+int Queue::commandReadQueueLength()
 {
-    Enter_Method("Queue::getQueueLength");
+    Enter_Method("Queue::commandReadQueueLength");
 
     return _queueData.size();
 }
@@ -91,6 +91,9 @@ int Queue::commandDequeue(int numItems)
 int Queue::commandQueue(ResourceBlock **RBs, int numItems)
 {
     Enter_Method("Queue::commandQueue");
+
+    if (_queueData.size() > 1000)
+        return 0;
 
     for (int i = 0; i < numItems; i++)
     {

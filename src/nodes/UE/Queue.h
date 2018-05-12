@@ -27,7 +27,7 @@ using namespace omnetpp;
 class Queue : public cSimpleModule
 {
 public:
-    int getQueueLength();
+    int commandReadQueueLength();
     int commandDequeue(int numItems);
     int commandQueue(ResourceBlock **RBs, int numItems = 1);
 private:

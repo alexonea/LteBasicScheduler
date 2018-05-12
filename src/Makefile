@@ -35,9 +35,11 @@ OBJS = \
     $O/nodes/UE/Queue.o \
     $O/nodes/UE/RGen.o \
     $O/nodes/UE/Transceiver.o \
+    $O/nodes/common/UserInfoInterface.o \
     $O/nodes/eNB/RoundRobinSchedulingScheme.o \
     $O/nodes/eNB/Scheduler.o \
     $O/nodes/eNB/SchedulingDecision.o \
+    $O/nodes/eNB/SchedulingScheme.o \
     $O/nodes/eNB/Sink.o \
     $O/messages/DataPacket_m.o \
     $O/messages/QueueControl_m.o \

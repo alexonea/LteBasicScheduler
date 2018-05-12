@@ -13,27 +13,22 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef __LTEBASICSCHEDULER_MANAGER_H_
-#define __LTEBASICSCHEDULER_MANAGER_H_
+#ifndef NODES_COMMON_USERINFOINTERFACE_H_
+#define NODES_COMMON_USERINFOINTERFACE_H_
 
 #include <omnetpp.h>
 
-#include "../common/UserInfoInterface.h"
-#include "Queue.h"
+#include "UserInfo.h"
 
 using namespace omnetpp;
 
-class Manager : public cSimpleModule, public UserInfoInterface
+class UserInfoInterface
 {
 public:
-    virtual long int commandReadUserQueueLength() override;
-protected:
-    virtual void initialize() override;
-    virtual void handleMessage(cMessage *msg) override;
-private:
-    static int count;
-    int _id;
-    Queue *_queueManager;
+    UserInfoInterface();
+    virtual ~UserInfoInterface();
+
+    virtual long int commandReadUserQueueLength() = 0;
 };
 
-#endif
+#endif /* NODES_COMMON_USERINFOINTERFACE_H_ */

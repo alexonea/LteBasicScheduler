@@ -16,17 +16,21 @@
 #ifndef NODES_ENB_ROUNDROBINSCHEDULINGSCHEME_H_
 #define NODES_ENB_ROUNDROBINSCHEDULINGSCHEME_H_
 
+#include "../common/UserInfoInterface.h"
 #include "SchedulingDecision.h"
+#include "SchedulingScheme.h"
 
-class RoundRobinSchedulingScheme
+
+class RoundRobinSchedulingScheme : public SchedulingScheme
 {
 public:
-    RoundRobinSchedulingScheme(int numUsers);
+    RoundRobinSchedulingScheme();
     virtual ~RoundRobinSchedulingScheme();
 
-    SchedulingDecision* schedule();
+    virtual SchedulingDecision* schedule(int numUsers, UserInfo *userInfo) override;
 private:
-    int _numUsers;
+    static int _findNextUser(int currentUserId, int numUsers, UserInfo *userInfo);
+
     int _numRBs;
     int _fixedAllocationSize;
     int *_schedTable;

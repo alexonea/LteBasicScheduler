@@ -16,6 +16,7 @@
 #include "Scheduler.h"
 
 #include "../../messages/ResourceAllocation_m.h"
+#include "RoundRobinSchedulingScheme.h"
 
 Define_Module(Scheduler);
 
@@ -24,25 +25,75 @@ void Scheduler::initialize()
     this->_schedCycle = par("schedCycle");
     this->_numConnections = par("size");
 
-    this->_schedulingScheme = new RoundRobinSchedulingScheme(_numConnections);
+    this->_schedulingScheme = new RoundRobinSchedulingScheme();
+    this->_userInfo = new UserInfo[_numConnections]();
+    this->_userManager = new UserInfoInterface*[_numConnections];
+    this->_signalUserAllocation = new simsignal_t[_numConnections]();
+
+    for (int i = 0; i < _numConnections; i++)
+    {
+        char tmp[64];
+
+        /* Get user info interface instance for each user */
+        sprintf(tmp, "BasicNetwork.n[%d].manager", i);
+        cModule *userQueueManager = this->getModuleByPath(tmp);
+        _userManager[i] = check_and_cast <UserInfoInterface*> (userQueueManager);
+
+        /* Register allocation signal for each user */
+        sprintf(tmp, "user%d-allocation", i);
+        _signalUserAllocation[i] = registerSignal(tmp);
+
+        cProperty *statisticTemplate = this->getProperties()->get("statisticTemplate", "user-allocation");
+        getEnvir()->addResultRecorders(this, _signalUserAllocation[i], tmp, statisticTemplate);
+    }
 
     cMessage *notification = new cMessage("scheduler");
     scheduleAt(simTime() + _schedCycle, notification);
+}
+
+void Scheduler::_readUserInfo()
+{
+      for (int i = 0; i < _numConnections; i++)
+      {
+          /* Try to read the user queue length, otherwise set it to N/A */
+          if (_userManager[i] != nullptr)
+          {
+              _userInfo[i].queueLength = _userManager[i]->commandReadUserQueueLength();
+          }
+          else
+          {
+              _userInfo[i].queueLength = USER_QUEUE_LENGTH_NA;
+          }
+
+          EV << "Queue length for user " << i << ": " << _userInfo[i].queueLength << endl;
+      }
 }
 
 void Scheduler::handleMessage(cMessage *msg)
 {
     if (msg->isSelfMessage())
     {
-        SchedulingDecision *decision = _schedulingScheme->schedule();
-        for (int i = 0; i < _numConnections; i++)
-        {
-            ResourceAllocation *ctrl = new ResourceAllocation("scheduler");
-            ctrl->setNumRBsToSend(decision->getAllocationForUser(i).count);
+        this->_readUserInfo();
 
-            send(ctrl, this->gate("ctrl$o", i));
+        SchedulingDecision *decision = _schedulingScheme->schedule(_numConnections, _userInfo);
+        if (decision != nullptr)
+        {
+            for (int i = 0; i < _numConnections; i++)
+            {
+                int toSend = decision->getAllocationForUser(i).count;
+                if (toSend != 0)
+                {
+                    ResourceAllocation *ctrl = new ResourceAllocation("scheduler");
+                    ctrl->setNumRBsToSend(toSend);
+
+                    send(ctrl, this->gate("ctrl$o", i));
+                }
+
+                emit(_signalUserAllocation[i], (unsigned long int) toSend);
+            }
         }
 
+        delete decision;
         scheduleAt(simTime() + _schedCycle, msg);
     }
 }

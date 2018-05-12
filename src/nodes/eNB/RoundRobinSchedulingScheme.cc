@@ -15,22 +15,49 @@
 
 #include "RoundRobinSchedulingScheme.h"
 
-RoundRobinSchedulingScheme::RoundRobinSchedulingScheme(int numUsers)
+RoundRobinSchedulingScheme::RoundRobinSchedulingScheme()
 {
-    this->_numUsers = numUsers;
     this->_numRBs = 30;
-    this->_fixedAllocationSize = 4;
+    this->_fixedAllocationSize = 7;
 
     this->_schedTable = new int[_numRBs];
 }
 
-SchedulingDecision* RoundRobinSchedulingScheme::schedule()
+int RoundRobinSchedulingScheme::_findNextUser(int currentUserId, int numUsers, UserInfo *userInfo)
+{
+    int count = 0;
+
+    currentUserId = (currentUserId + 1) % numUsers;
+
+    if (userInfo != nullptr)
+    {
+
+        while (userInfo[currentUserId].queueLength == 0 && count < numUsers)
+        {
+            currentUserId = (currentUserId + 1) % numUsers;
+            count++;
+        }
+
+        /* if no users have to send, return null */
+        if (count == numUsers)
+            return -1;
+    }
+
+    return currentUserId;
+}
+
+SchedulingDecision* RoundRobinSchedulingScheme::schedule(int numUsers, UserInfo *userInfo)
 {
     static int currentUserId = 0;
     static int currentAllocationPos = 0;
-    static int currentSchedulingCycle = 0;
 
-    SchedulingDecision *decision = new SchedulingDecision(_numUsers);
+    SchedulingDecision *decision = new SchedulingDecision(numUsers);
+
+    /* find the first user which has a non empty queue */
+    currentUserId = _findNextUser(-1, numUsers, userInfo);
+
+    if (currentUserId == -1)
+        return nullptr;
 
     for (int timeslot = 0; timeslot < 2; timeslot++)
     {
@@ -39,19 +66,25 @@ SchedulingDecision* RoundRobinSchedulingScheme::schedule()
                if (currentAllocationPos >= _fixedAllocationSize)
                {
                    currentAllocationPos = 0;
-                   currentUserId = (currentUserId + 1) % _numUsers;
+                   currentUserId = _findNextUser(currentUserId, numUsers, userInfo);
                }
 
                _schedTable[currentRB] = currentUserId;
                currentAllocationPos++;
            }
 
+           EV << "Timeslot " << timeslot << ": ";
+
            /* update the current schedule */
            for (int currentRB = 0; currentRB < _numRBs; currentRB++)
            {
                int userId = _schedTable[currentRB];
                decision->allocateToUser(userId, currentRB, timeslot);
+
+               EV << userId << " ";
            }
+
+           EV << endl;
     }
 
     return decision;

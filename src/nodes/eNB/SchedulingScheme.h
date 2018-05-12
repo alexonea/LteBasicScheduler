@@ -13,27 +13,20 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef __LTEBASICSCHEDULER_MANAGER_H_
-#define __LTEBASICSCHEDULER_MANAGER_H_
+#ifndef NODES_ENB_SCHEDULINGSCHEME_H_
+#define NODES_ENB_SCHEDULINGSCHEME_H_
 
-#include <omnetpp.h>
+#include "../common/UserInfo.h"
 
-#include "../common/UserInfoInterface.h"
-#include "Queue.h"
+#include "SchedulingDecision.h"
 
-using namespace omnetpp;
-
-class Manager : public cSimpleModule, public UserInfoInterface
+class SchedulingScheme
 {
 public:
-    virtual long int commandReadUserQueueLength() override;
-protected:
-    virtual void initialize() override;
-    virtual void handleMessage(cMessage *msg) override;
-private:
-    static int count;
-    int _id;
-    Queue *_queueManager;
+    SchedulingScheme();
+    virtual ~SchedulingScheme();
+
+    virtual SchedulingDecision* schedule(int numUsers, UserInfo *userInfo) = 0;
 };
 
-#endif
+#endif /* NODES_ENB_SCHEDULINGSCHEME_H_ */

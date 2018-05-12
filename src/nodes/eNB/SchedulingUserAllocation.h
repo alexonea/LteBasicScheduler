@@ -28,6 +28,12 @@ typedef struct _SchUserAllocation
 {
     int count;
     std::vector<RBAllocation> RBs;
+
+    _SchUserAllocation()
+    {
+        count = 0;
+        RBs = std::vector<RBAllocation>();
+    }
 } SchUserAllocation;
 
 #endif /* NODES_ENB_SCHEDULINGUSERALLOCATION_H_ */

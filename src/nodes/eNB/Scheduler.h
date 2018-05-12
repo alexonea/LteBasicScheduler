@@ -18,7 +18,8 @@
 
 #include <omnetpp.h>
 
-#include "RoundRobinSchedulingScheme.h"
+#include "../common/UserInfoInterface.h"
+#include "SchedulingScheme.h"
 
 using namespace omnetpp;
 
@@ -27,7 +28,12 @@ class Scheduler : public cSimpleModule
 private:
     double _schedCycle;
     int _numConnections;
-    RoundRobinSchedulingScheme *_schedulingScheme;
+    SchedulingScheme *_schedulingScheme;
+    UserInfo *_userInfo;
+    UserInfoInterface **_userManager;
+    simsignal_t *_signalUserAllocation;
+
+    void _readUserInfo();
 protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
