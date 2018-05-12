@@ -32,7 +32,6 @@ private:
     static int _findNextUser(int currentUserId, int numUsers, UserInfo *userInfo);
 
     int _fixedAllocationSize;
-    int *_schedTable;
 };
 
 #endif /* NODES_ENB_ROUNDROBINSCHEDULINGSCHEME_H_ */

@@ -18,9 +18,10 @@
 SchedulingScheme::SchedulingScheme(int numRBs)
 {
     this->_numRBs = numRBs;
+    this->_schedTable = new int[_numRBs];
 }
 
 SchedulingScheme::~SchedulingScheme()
 {
-    // TODO Auto-generated destructor stub
+    delete [] _schedTable;
 }

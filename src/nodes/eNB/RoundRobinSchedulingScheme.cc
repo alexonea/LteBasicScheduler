@@ -18,7 +18,6 @@
 RoundRobinSchedulingScheme::RoundRobinSchedulingScheme(int numRBs, int fixedAllocationSize) : SchedulingScheme(numRBs)
 {
     this->_fixedAllocationSize = fixedAllocationSize;
-    this->_schedTable = new int[_numRBs];
 }
 
 int RoundRobinSchedulingScheme::_findNextUser(int currentUserId, int numUsers, UserInfo *userInfo)
@@ -90,5 +89,4 @@ SchedulingDecision* RoundRobinSchedulingScheme::schedule(int numUsers, UserInfo 
 
 RoundRobinSchedulingScheme::~RoundRobinSchedulingScheme()
 {
-    delete [] _schedTable;
 }
