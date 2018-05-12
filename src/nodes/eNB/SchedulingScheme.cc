@@ -15,9 +15,9 @@
 
 #include "SchedulingScheme.h"
 
-SchedulingScheme::SchedulingScheme()
+SchedulingScheme::SchedulingScheme(int numRBs)
 {
-    // TODO Auto-generated constructor stub
+    this->_numRBs = numRBs;
 }
 
 SchedulingScheme::~SchedulingScheme()

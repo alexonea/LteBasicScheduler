@@ -23,10 +23,12 @@
 class SchedulingScheme
 {
 public:
-    SchedulingScheme();
+    SchedulingScheme(int numRBs);
     virtual ~SchedulingScheme();
 
     virtual SchedulingDecision* schedule(int numUsers, UserInfo *userInfo) = 0;
+protected:
+    int _numRBs;
 };
 
 #endif /* NODES_ENB_SCHEDULINGSCHEME_H_ */

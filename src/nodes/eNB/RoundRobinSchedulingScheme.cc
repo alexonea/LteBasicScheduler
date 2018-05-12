@@ -15,11 +15,9 @@
 
 #include "RoundRobinSchedulingScheme.h"
 
-RoundRobinSchedulingScheme::RoundRobinSchedulingScheme()
+RoundRobinSchedulingScheme::RoundRobinSchedulingScheme(int numRBs, int fixedAllocationSize) : SchedulingScheme(numRBs)
 {
-    this->_numRBs = 30;
-    this->_fixedAllocationSize = 7;
-
+    this->_fixedAllocationSize = fixedAllocationSize;
     this->_schedTable = new int[_numRBs];
 }
 

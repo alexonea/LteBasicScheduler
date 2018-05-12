@@ -13,26 +13,18 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef NODES_ENB_ROUNDROBINSCHEDULINGSCHEME_H_
-#define NODES_ENB_ROUNDROBINSCHEDULINGSCHEME_H_
+#ifndef NODES_ENB_PROPORTIONALFAIRSCHEDULINGSCHEME_H_
+#define NODES_ENB_PROPORTIONALFAIRSCHEDULINGSCHEME_H_
 
-#include "../common/UserInfoInterface.h"
-#include "SchedulingDecision.h"
 #include "SchedulingScheme.h"
 
-
-class RoundRobinSchedulingScheme : public SchedulingScheme
+class ProportionalFairSchedulingScheme: public SchedulingScheme
 {
 public:
-    RoundRobinSchedulingScheme(int numRBs, int fixedAllocationSize);
-    virtual ~RoundRobinSchedulingScheme();
+    ProportionalFairSchedulingScheme(int numRBs);
+    virtual ~ProportionalFairSchedulingScheme();
 
     virtual SchedulingDecision* schedule(int numUsers, UserInfo *userInfo) override;
-private:
-    static int _findNextUser(int currentUserId, int numUsers, UserInfo *userInfo);
-
-    int _fixedAllocationSize;
-    int *_schedTable;
 };
 
-#endif /* NODES_ENB_ROUNDROBINSCHEDULINGSCHEME_H_ */
+#endif /* NODES_ENB_PROPORTIONALFAIRSCHEDULINGSCHEME_H_ */

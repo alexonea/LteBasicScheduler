@@ -25,7 +25,7 @@ void Scheduler::initialize()
     this->_schedCycle = par("schedCycle");
     this->_numConnections = par("size");
 
-    this->_schedulingScheme = new RoundRobinSchedulingScheme();
+    this->_schedulingScheme = new RoundRobinSchedulingScheme(_numConnections, 7);
     this->_userInfo = new UserInfo[_numConnections]();
     this->_userManager = new UserInfoInterface*[_numConnections];
     this->_signalUserAllocation = new simsignal_t[_numConnections]();
