@@ -13,6 +13,7 @@
 typedef struct _UserInfo
 {
     long int queueLength;
+    double *channelQuality;
 } UserInfo;
 
 

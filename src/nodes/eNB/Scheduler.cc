@@ -54,6 +54,8 @@ void Scheduler::initialize()
         this->_channelQuality[i] = new double[_numRBs]();
         for (int j = 0; j < _numRBs; j++)
             _channelQuality[i][j] = 1.0;
+
+        this->_userInfo[i].channelQuality = _channelQuality[i];
     }
 
     cMessage *notification = new cMessage("scheduler");
