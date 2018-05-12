@@ -1,5 +1,5 @@
 //
-// Generated file, do not edit! Created by nedtool 5.3 from messages/ResourceBlock.msg.
+// Generated file, do not edit! Created by nedtool 5.3 from nodes/eNB/../../messages/ResourceBlock.msg.
 //
 
 #if defined(__clang__)
@@ -19,12 +19,13 @@
 
 
 /**
- * Class generated from <tt>messages/ResourceBlock.msg:17</tt> by nedtool.
+ * Class generated from <tt>nodes/eNB/../../messages/ResourceBlock.msg:17</tt> by nedtool.
  * <pre>
  * packet ResourceBlock
  * {
  *     int senderId;
  *     int size;
+ *     int resourceGridId;
  * }
  * </pre>
  */
@@ -33,6 +34,7 @@ class ResourceBlock : public ::omnetpp::cPacket
   protected:
     int senderId;
     int size;
+    int resourceGridId;
 
   private:
     void copy(const ResourceBlock& other);
@@ -55,6 +57,8 @@ class ResourceBlock : public ::omnetpp::cPacket
     virtual void setSenderId(int senderId);
     virtual int getSize() const;
     virtual void setSize(int size);
+    virtual int getResourceGridId() const;
+    virtual void setResourceGridId(int resourceGridId);
 };
 
 inline void doParsimPacking(omnetpp::cCommBuffer *b, const ResourceBlock& obj) {obj.parsimPack(b);}

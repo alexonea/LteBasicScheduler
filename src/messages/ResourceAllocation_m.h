@@ -1,5 +1,5 @@
 //
-// Generated file, do not edit! Created by nedtool 5.3 from messages/ResourceAllocation.msg.
+// Generated file, do not edit! Created by nedtool 5.3 from nodes/UE/../../messages/ResourceAllocation.msg.
 //
 
 #if defined(__clang__)
@@ -18,12 +18,17 @@
 
 
 
+// cplusplus {{
+    typedef std::vector<int> ResourceGridAllocation;
+// }}
+
 /**
- * Class generated from <tt>messages/ResourceAllocation.msg:16</tt> by nedtool.
+ * Class generated from <tt>nodes/UE/../../messages/ResourceAllocation.msg:23</tt> by nedtool.
  * <pre>
  * message ResourceAllocation
  * {
  *     int numRBsToSend;
+ *     ResourceGridAllocation gridAllocation;
  * }
  * </pre>
  */
@@ -31,6 +36,7 @@ class ResourceAllocation : public ::omnetpp::cMessage
 {
   protected:
     int numRBsToSend;
+    ResourceGridAllocation gridAllocation;
 
   private:
     void copy(const ResourceAllocation& other);
@@ -51,6 +57,9 @@ class ResourceAllocation : public ::omnetpp::cMessage
     // field getter/setter methods
     virtual int getNumRBsToSend() const;
     virtual void setNumRBsToSend(int numRBsToSend);
+    virtual ResourceGridAllocation& getGridAllocation();
+    virtual const ResourceGridAllocation& getGridAllocation() const {return const_cast<ResourceAllocation*>(this)->getGridAllocation();}
+    virtual void setGridAllocation(const ResourceGridAllocation& gridAllocation);
 };
 
 inline void doParsimPacking(omnetpp::cCommBuffer *b, const ResourceAllocation& obj) {obj.parsimPack(b);}
@@ -58,4 +67,6 @@ inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ResourceAllocation& obj) 
 
 
 #endif // ifndef __RESOURCEALLOCATION_M_H
+
+
 

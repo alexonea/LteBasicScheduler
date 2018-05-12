@@ -80,16 +80,24 @@ void Scheduler::handleMessage(cMessage *msg)
         {
             for (int i = 0; i < _numConnections; i++)
             {
-                int toSend = decision->getAllocationForUser(i).count;
-                if (toSend != 0)
+                SchUserAllocation userAllocation = decision->getAllocationForUser(i);
+                if (userAllocation.count != 0)
                 {
+                    std::vector<int> gridAllocation;
                     ResourceAllocation *ctrl = new ResourceAllocation("scheduler");
-                    ctrl->setNumRBsToSend(toSend);
+
+                    for (int j = 0; j < userAllocation.count; j++)
+                    {
+                        gridAllocation.push_back(userAllocation.RBs[i].RB);
+                    }
+
+                    ctrl->setNumRBsToSend(userAllocation.count);
+                    ctrl->setGridAllocation(gridAllocation);
 
                     send(ctrl, this->gate("ctrl$o", i));
                 }
 
-                emit(_signalUserAllocation[i], (unsigned long int) toSend);
+                emit(_signalUserAllocation[i], (unsigned long int) userAllocation.count);
             }
         }
 
