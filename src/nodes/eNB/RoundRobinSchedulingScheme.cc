@@ -27,7 +27,6 @@ int RoundRobinSchedulingScheme::_findNextUser(int currentUserId, int numUsers, U
 {
     int count = 0;
 
-    EV << "Finding next user after " << currentUserId << endl;
     currentUserId = (currentUserId + 1) % numUsers;
 
     if (userInfo != nullptr)
@@ -35,7 +34,6 @@ int RoundRobinSchedulingScheme::_findNextUser(int currentUserId, int numUsers, U
 
         while (userInfo[currentUserId].queueLength == 0 && count < numUsers)
         {
-            EV << "Trying " << currentUserId << "... NOK" << endl;
             currentUserId = (currentUserId + 1) % numUsers;
             count++;
         }
@@ -43,8 +41,6 @@ int RoundRobinSchedulingScheme::_findNextUser(int currentUserId, int numUsers, U
         /* if no users have to send, return null */
         if (count == numUsers)
             return -1;
-
-        EV << "User " << currentUserId << " selected!" << endl;
     }
 
     return currentUserId;

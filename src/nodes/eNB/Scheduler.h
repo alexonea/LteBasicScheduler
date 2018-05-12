@@ -31,6 +31,8 @@ private:
     SchedulingScheme *_schedulingScheme;
     UserInfo *_userInfo;
     UserInfoInterface **_userManager;
+
+    static void _readUserInfo();
 protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);

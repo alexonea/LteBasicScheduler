@@ -29,6 +29,7 @@ void Scheduler::initialize()
     this->_userInfo = new UserInfo[_numConnections]();
     this->_userManager = new UserInfoInterface*[_numConnections];
 
+    /* Get user info interface instance for all users */
     for (int i = 0; i < _numConnections; i++)
     {
         char path[128];
@@ -41,25 +42,29 @@ void Scheduler::initialize()
     scheduleAt(simTime() + _schedCycle, notification);
 }
 
+void Scheduler::_readUserInfo()
+{
+      for (int i = 0; i < _numConnections; i++)
+      {
+          /* Try to read the user queue length, otherwise set it to N/A */
+          if (_userManager[i] != nullptr)
+          {
+              _userInfo[i].queueLength = _userManager[i]->commandReadUserQueueLength();
+          }
+          else
+          {
+              _userInfo[i].queueLength = USER_QUEUE_LENGTH_NA;
+          }
+
+          EV << "Queue length for user " << i << ": " << _userInfo[i].queueLength << endl;
+      }
+}
+
 void Scheduler::handleMessage(cMessage *msg)
 {
     if (msg->isSelfMessage())
     {
-        /* Read the user queue length */
-        for (int i = 0; i < _numConnections; i++)
-        {
-            /* Try to read the user queue length, otherwise set it to N/A */
-            if (_userManager[i] != nullptr)
-            {
-                _userInfo[i].queueLength = _userManager[i]->commandReadUserQueueLength();
-            }
-            else
-            {
-                _userInfo[i].queueLength = USER_QUEUE_LENGTH_NA;
-            }
-
-            EV << "Queue length for user " << i << ": " << _userInfo[i].queueLength << endl;
-        }
+        this->_readUserInfo();
 
         SchedulingDecision *decision = _schedulingScheme->schedule(_numConnections, _userInfo);
         if (decision != nullptr)
