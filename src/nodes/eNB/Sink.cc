@@ -27,6 +27,9 @@ void Sink::initialize()
     _signalUserRBs = new simsignal_t[_numUsers]();
     _statsUpdateCycle = par("statsTimeUnit");
 
+    cModule *schedulerModule = this->getParentModule()->getSubmodule("scheduler");
+    this->_channelQualityManager = check_and_cast <ChannelQualityReportingInterface *> (schedulerModule);
+
     for (int i = 0; i < _numUsers; i++)
     {
         char userIdStr[12];
@@ -65,6 +68,13 @@ void Sink::handleMessage(cMessage *msg)
 
         _userStats[userId].totalRBs ++;
         _userStats[userId].bitsSinceLastTimeUnit += rb->getSize();
+
+        if (_channelQualityManager != nullptr)
+        {
+            int RB = rb->getResourceGridId();
+            double quality = rb->getChannelQuality();
+            _channelQualityManager->commandUpdateChannelQuality(userId, RB, quality);
+        }
 
         EV << "Received " << rb->getSize() << " bits from user " << userId << endl;
         EV << "Total number of bits in the last 1ms is now " << _userStats[userId].bitsSinceLastTimeUnit << endl;

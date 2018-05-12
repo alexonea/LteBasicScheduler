@@ -15,6 +15,8 @@
 
 #include "Scheduler.h"
 
+#include <iomanip>
+
 #include "../../messages/ResourceAllocation_m.h"
 #include "RoundRobinSchedulingScheme.h"
 
@@ -22,13 +24,16 @@ Define_Module(Scheduler);
 
 void Scheduler::initialize()
 {
+    this->_numRBs = 30;
     this->_schedCycle = par("schedCycle");
     this->_numConnections = par("size");
 
-    this->_schedulingScheme = new RoundRobinSchedulingScheme(_numConnections, 7);
+    this->_schedulingScheme = new RoundRobinSchedulingScheme(_numRBs, 7);
     this->_userInfo = new UserInfo[_numConnections]();
     this->_userManager = new UserInfoInterface*[_numConnections];
     this->_signalUserAllocation = new simsignal_t[_numConnections]();
+
+    this->_channelQuality = new double*[_numConnections];
 
     for (int i = 0; i < _numConnections; i++)
     {
@@ -45,10 +50,25 @@ void Scheduler::initialize()
 
         cProperty *statisticTemplate = this->getProperties()->get("statisticTemplate", "user-allocation");
         getEnvir()->addResultRecorders(this, _signalUserAllocation[i], tmp, statisticTemplate);
+
+        this->_channelQuality[i] = new double[_numRBs]();
+        for (int j = 0; j < _numRBs; j++)
+            _channelQuality[i][j] = 1.0;
     }
 
     cMessage *notification = new cMessage("scheduler");
     scheduleAt(simTime() + _schedCycle, notification);
+}
+
+void Scheduler::commandUpdateChannelQuality(int userId, int RB, double value)
+{
+    if (RB < 0 || RB >= _numRBs)
+        return;
+
+    if (userId < 0 || userId >= _numConnections)
+        return;
+
+    _channelQuality[userId][RB] = value;
 }
 
 void Scheduler::_readUserInfo()
@@ -69,11 +89,31 @@ void Scheduler::_readUserInfo()
       }
 }
 
+void Scheduler::_printChannelQuality()
+{
+    std::stringstream out;
+    out << std::setw(7) << std::left << "Usr/RB";
+    for (int i = 0; i < _numRBs; i++)
+        out << std::setw(5) << std::left << i;
+
+    for (int i = 0; i < _numConnections; i++)
+    {
+        out << std::endl << std::setw(7) << std::left << i;
+        for (int j = 0; j < _numRBs; j++)
+        {
+            out << std::setw(5) << std::left << std::setprecision(2) <<_channelQuality[i][j];
+        }
+    }
+
+    EV << out.str() << std::endl;
+}
+
 void Scheduler::handleMessage(cMessage *msg)
 {
     if (msg->isSelfMessage())
     {
         this->_readUserInfo();
+        this->_printChannelQuality();
 
         SchedulingDecision *decision = _schedulingScheme->schedule(_numConnections, _userInfo);
         if (decision != nullptr)
@@ -86,10 +126,13 @@ void Scheduler::handleMessage(cMessage *msg)
                     std::vector<int> gridAllocation;
                     ResourceAllocation *ctrl = new ResourceAllocation("scheduler");
 
+                    EV << "Allocation for user " << i << ": ";
                     for (int j = 0; j < userAllocation.count; j++)
                     {
-                        gridAllocation.push_back(userAllocation.RBs[i].RB);
+                        EV << userAllocation.RBs[j].RB << " ";
+                        gridAllocation.push_back(userAllocation.RBs[j].RB);
                     }
+                    EV << endl;
 
                     ctrl->setNumRBsToSend(userAllocation.count);
                     ctrl->setGridAllocation(gridAllocation);

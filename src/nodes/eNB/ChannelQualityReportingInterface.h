@@ -13,22 +13,16 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package ltebasicscheduler.nodes.eNB;
+#ifndef NODES_ENB_CHANNELQUALITYREPORTINGINTERFACE_H_
+#define NODES_ENB_CHANNELQUALITYREPORTINGINTERFACE_H_
 
-module eNB
+class ChannelQualityReportingInterface
 {
-	parameters:
-		int maxConnections = default(100);
-	gates:
-		inout ctrl[maxConnections] @loose;
-		input ulink[maxConnections] @loose;
-	submodules:
-		sink : Sink { size = maxConnections; };
-		scheduler : Scheduler { size = maxConnections; };
-	connections:
-		for i = 0..(maxConnections - 1)
-		{
-			ulink++ --> sink.drain++;
-			ctrl++ <--> scheduler.ctrl++;
-		}
-}
+public:
+    ChannelQualityReportingInterface() {};
+    virtual ~ChannelQualityReportingInterface() {};
+
+    virtual void commandUpdateChannelQuality(int userId, int RB, double value) = 0;
+};
+
+#endif /* NODES_ENB_CHANNELQUALITYREPORTINGINTERFACE_H_ */

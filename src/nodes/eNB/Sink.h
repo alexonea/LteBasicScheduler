@@ -18,6 +18,8 @@
 
 #include <omnetpp.h>
 
+#include "ChannelQualityReportingInterface.h"
+
 using namespace omnetpp;
 
 typedef struct _UserStats
@@ -39,6 +41,7 @@ private:
     double _statsUpdateCycle;
     UserStats *_userStats;
     simsignal_t *_signalUserRBs;
+    ChannelQualityReportingInterface *_channelQualityManager;
 };
 
 #endif

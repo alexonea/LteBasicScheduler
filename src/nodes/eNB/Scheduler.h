@@ -20,24 +20,30 @@
 
 #include "../common/UserInfoInterface.h"
 #include "SchedulingScheme.h"
+#include "ChannelQualityReportingInterface.h"
 
 using namespace omnetpp;
 
-class Scheduler : public cSimpleModule
+class Scheduler : public cSimpleModule, public ChannelQualityReportingInterface
 {
 private:
     double _schedCycle;
     int _numConnections;
+    int _numRBs;
     SchedulingScheme *_schedulingScheme;
     UserInfo *_userInfo;
     UserInfoInterface **_userManager;
     simsignal_t *_signalUserAllocation;
+    double **_channelQuality;
 
     void _readUserInfo();
+    void _printChannelQuality();
 protected:
-    virtual void initialize();
-    virtual void handleMessage(cMessage *msg);
-    virtual void finish();
+    virtual void initialize() override;
+    virtual void handleMessage(cMessage *msg) override;
+    virtual void finish() override;
+public:
+    virtual void commandUpdateChannelQuality(int userId, int RB, double value) override;
 };
 
 #endif

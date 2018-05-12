@@ -26,6 +26,7 @@
  *     int senderId;
  *     int size;
  *     int resourceGridId;
+ *     double channelQuality;
  * }
  * </pre>
  */
@@ -35,6 +36,7 @@ class ResourceBlock : public ::omnetpp::cPacket
     int senderId;
     int size;
     int resourceGridId;
+    double channelQuality;
 
   private:
     void copy(const ResourceBlock& other);
@@ -59,6 +61,8 @@ class ResourceBlock : public ::omnetpp::cPacket
     virtual void setSize(int size);
     virtual int getResourceGridId() const;
     virtual void setResourceGridId(int resourceGridId);
+    virtual double getChannelQuality() const;
+    virtual void setChannelQuality(double channelQuality);
 };
 
 inline void doParsimPacking(omnetpp::cCommBuffer *b, const ResourceBlock& obj) {obj.parsimPack(b);}

@@ -81,6 +81,7 @@ int Queue::commandDequeue(int numItems, std::vector<int> allocation)
         _queueData.pop();
 
         rb->setResourceGridId(allocation[count]);
+        rb->setChannelQuality(par("channelQuality"));
 
         drop(rb);
         send(rb, "out");
