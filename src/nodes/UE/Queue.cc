@@ -35,8 +35,9 @@ void Queue::handleMessage(cMessage *msg)
     {
         QueueControl *req = static_cast <QueueControl *> (msg);
         int toDequeue = req->getDequeue();
+        std::vector<int> allocation = req->getAllocation();
 
-        this->commandDequeue(toDequeue);
+        this->commandDequeue(toDequeue, allocation);
 
         delete req;
     }
@@ -69,23 +70,25 @@ int Queue::commandReadQueueLength()
     return _queueData.size();
 }
 
-int Queue::commandDequeue(int numItems)
+int Queue::commandDequeue(int numItems, std::vector<int> allocation)
 {
     Enter_Method("Queue::commandDequeue");
 
-    int itemsLeft = numItems;
-    while (!_queueData.empty() && itemsLeft > 0)
+    int count = 0;
+    while (!_queueData.empty() && count < numItems)
     {
         ResourceBlock *rb = _queueData.front();
         _queueData.pop();
 
+        rb->setResourceGridId(allocation[count]);
+
         drop(rb);
         send(rb, "out");
 
-        itemsLeft--;
+        count++;
     }
 
-    return numItems - itemsLeft;
+    return count;
 }
 
 int Queue::commandQueue(ResourceBlock **RBs, int numItems)

@@ -38,11 +38,12 @@ void Manager::handleMessage(cMessage *msg)
         {
             ResourceAllocation *ctrl = static_cast <ResourceAllocation *> (msg);
             int allowance = ctrl->getNumRBsToSend();
+            std::vector<int> allocation = ctrl->getGridAllocation();
 
             /* Try communication using direct module calls */
             if (_queueManager != nullptr)
             {
-                _queueManager->commandDequeue(allowance);
+                _queueManager->commandDequeue(allowance, allocation);
             }
             /* in case of error, fall back to the default message communication */
             else

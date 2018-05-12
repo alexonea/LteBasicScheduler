@@ -28,7 +28,7 @@ class Queue : public cSimpleModule
 {
 public:
     int commandReadQueueLength();
-    int commandDequeue(int numItems);
+    int commandDequeue(int numItems, std::vector<int> allocation);
     int commandQueue(ResourceBlock **RBs, int numItems = 1);
 private:
     std::queue<ResourceBlock *> _queueData;
