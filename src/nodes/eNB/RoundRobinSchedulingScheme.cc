@@ -23,7 +23,7 @@ RoundRobinSchedulingScheme::RoundRobinSchedulingScheme()
     this->_schedTable = new int[_numRBs];
 }
 
-int RoundRobinSchedulingScheme::_findNextUser(int currentUserId, int numUsers, UserInformation *userInfo)
+int RoundRobinSchedulingScheme::_findNextUser(int currentUserId, int numUsers, UserInfo *userInfo)
 {
     int count = 0;
 
@@ -50,7 +50,7 @@ int RoundRobinSchedulingScheme::_findNextUser(int currentUserId, int numUsers, U
     return currentUserId;
 }
 
-SchedulingDecision* RoundRobinSchedulingScheme::schedule(int numUsers, UserInformation *userInfo)
+SchedulingDecision* RoundRobinSchedulingScheme::schedule(int numUsers, UserInfo *userInfo)
 {
     static int currentUserId = 0;
     static int currentAllocationPos = 0;

@@ -16,16 +16,11 @@
 #ifndef NODES_COMMON_USERINFORMATIONINTERFACE_H_
 #define NODES_COMMON_USERINFORMATIONINTERFACE_H_
 
-#define USER_QUEUE_LENGTH_NA -1
-
 #include <omnetpp.h>
 
-using namespace omnetpp;
+#include "UserInfo.h"
 
-typedef struct _UserInformation
-{
-    long int queueLength;
-} UserInformation;
+using namespace omnetpp;
 
 class UserInformationInterface
 {

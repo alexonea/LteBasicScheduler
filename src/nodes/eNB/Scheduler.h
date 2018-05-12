@@ -29,7 +29,7 @@ private:
     double _schedCycle;
     int _numConnections;
     SchedulingScheme *_schedulingScheme;
-    UserInformation *_userQueueLength;
+    UserInfo *_userQueueLength;
     UserInformationInterface **_userQueueManager;
 protected:
     virtual void initialize();

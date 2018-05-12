@@ -26,7 +26,7 @@ void Scheduler::initialize()
     this->_numConnections = par("size");
 
     this->_schedulingScheme = new RoundRobinSchedulingScheme();
-    this->_userQueueLength = new UserInformation[_numConnections]();
+    this->_userQueueLength = new UserInfo[_numConnections]();
     this->_userQueueManager = new UserInformationInterface*[_numConnections];
 
     for (int i = 0; i < _numConnections; i++)

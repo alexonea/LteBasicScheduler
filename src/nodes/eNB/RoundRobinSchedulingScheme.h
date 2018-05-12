@@ -27,9 +27,9 @@ public:
     RoundRobinSchedulingScheme();
     virtual ~RoundRobinSchedulingScheme();
 
-    virtual SchedulingDecision* schedule(int numUsers, UserInformation *userInfo) override;
+    virtual SchedulingDecision* schedule(int numUsers, UserInfo *userInfo) override;
 private:
-    static int _findNextUser(int currentUserId, int numUsers, UserInformation *userInfo);
+    static int _findNextUser(int currentUserId, int numUsers, UserInfo *userInfo);
 
     int _numRBs;
     int _fixedAllocationSize;
