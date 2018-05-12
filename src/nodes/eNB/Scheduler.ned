@@ -20,6 +20,8 @@ simple Scheduler
     parameters:
         int size = default(10);
         double schedCycle = 0.001 @units(s);
+        @signal[user*-allocation] (type=int);
+        @statisticTemplate[user-allocation] (record=vector);
     gates:
         inout ctrl[size] @loose;
 }

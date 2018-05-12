@@ -28,14 +28,23 @@ void Scheduler::initialize()
     this->_schedulingScheme = new RoundRobinSchedulingScheme();
     this->_userInfo = new UserInfo[_numConnections]();
     this->_userManager = new UserInfoInterface*[_numConnections];
+    this->_signalUserAllocation = new simsignal_t[_numConnections]();
 
-    /* Get user info interface instance for all users */
     for (int i = 0; i < _numConnections; i++)
     {
-        char path[128];
-        sprintf(path, "BasicNetwork.n[%d].manager", i);
-        cModule *userQueueManager = this->getModuleByPath(path);
+        char tmp[64];
+
+        /* Get user info interface instance for each user */
+        sprintf(tmp, "BasicNetwork.n[%d].manager", i);
+        cModule *userQueueManager = this->getModuleByPath(tmp);
         _userManager[i] = check_and_cast <UserInfoInterface*> (userQueueManager);
+
+        /* Register allocation signal for each user */
+        sprintf(tmp, "user%d-allocation", i);
+        _signalUserAllocation[i] = registerSignal(tmp);
+
+        cProperty *statisticTemplate = this->getProperties()->get("statisticTemplate", "user-allocation");
+        getEnvir()->addResultRecorders(this, _signalUserAllocation[i], tmp, statisticTemplate);
     }
 
     cMessage *notification = new cMessage("scheduler");
@@ -79,8 +88,9 @@ void Scheduler::handleMessage(cMessage *msg)
 
                     send(ctrl, this->gate("ctrl$o", i));
                 }
-            }
 
+                emit(_signalUserAllocation[i], (unsigned long int) toSend);
+            }
         }
 
         delete decision;

@@ -182,6 +182,7 @@ Register_Class(ResourceBlock)
 ResourceBlock::ResourceBlock(const char *name, short kind) : ::omnetpp::cPacket(name,kind)
 {
     this->senderId = 0;
+    this->size = 0;
 }
 
 ResourceBlock::ResourceBlock(const ResourceBlock& other) : ::omnetpp::cPacket(other)
@@ -204,18 +205,21 @@ ResourceBlock& ResourceBlock::operator=(const ResourceBlock& other)
 void ResourceBlock::copy(const ResourceBlock& other)
 {
     this->senderId = other.senderId;
+    this->size = other.size;
 }
 
 void ResourceBlock::parsimPack(omnetpp::cCommBuffer *b) const
 {
     ::omnetpp::cPacket::parsimPack(b);
     doParsimPacking(b,this->senderId);
+    doParsimPacking(b,this->size);
 }
 
 void ResourceBlock::parsimUnpack(omnetpp::cCommBuffer *b)
 {
     ::omnetpp::cPacket::parsimUnpack(b);
     doParsimUnpacking(b,this->senderId);
+    doParsimUnpacking(b,this->size);
 }
 
 int ResourceBlock::getSenderId() const
@@ -226,6 +230,16 @@ int ResourceBlock::getSenderId() const
 void ResourceBlock::setSenderId(int senderId)
 {
     this->senderId = senderId;
+}
+
+int ResourceBlock::getSize() const
+{
+    return this->size;
+}
+
+void ResourceBlock::setSize(int size)
+{
+    this->size = size;
 }
 
 class ResourceBlockDescriptor : public omnetpp::cClassDescriptor
@@ -293,7 +307,7 @@ const char *ResourceBlockDescriptor::getProperty(const char *propertyname) const
 int ResourceBlockDescriptor::getFieldCount() const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? 1+basedesc->getFieldCount() : 1;
+    return basedesc ? 2+basedesc->getFieldCount() : 2;
 }
 
 unsigned int ResourceBlockDescriptor::getFieldTypeFlags(int field) const
@@ -306,8 +320,9 @@ unsigned int ResourceBlockDescriptor::getFieldTypeFlags(int field) const
     }
     static unsigned int fieldTypeFlags[] = {
         FD_ISEDITABLE,
+        FD_ISEDITABLE,
     };
-    return (field>=0 && field<1) ? fieldTypeFlags[field] : 0;
+    return (field>=0 && field<2) ? fieldTypeFlags[field] : 0;
 }
 
 const char *ResourceBlockDescriptor::getFieldName(int field) const
@@ -320,8 +335,9 @@ const char *ResourceBlockDescriptor::getFieldName(int field) const
     }
     static const char *fieldNames[] = {
         "senderId",
+        "size",
     };
-    return (field>=0 && field<1) ? fieldNames[field] : nullptr;
+    return (field>=0 && field<2) ? fieldNames[field] : nullptr;
 }
 
 int ResourceBlockDescriptor::findField(const char *fieldName) const
@@ -329,6 +345,7 @@ int ResourceBlockDescriptor::findField(const char *fieldName) const
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     int base = basedesc ? basedesc->getFieldCount() : 0;
     if (fieldName[0]=='s' && strcmp(fieldName, "senderId")==0) return base+0;
+    if (fieldName[0]=='s' && strcmp(fieldName, "size")==0) return base+1;
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
@@ -342,8 +359,9 @@ const char *ResourceBlockDescriptor::getFieldTypeString(int field) const
     }
     static const char *fieldTypeStrings[] = {
         "int",
+        "int",
     };
-    return (field>=0 && field<1) ? fieldTypeStrings[field] : nullptr;
+    return (field>=0 && field<2) ? fieldTypeStrings[field] : nullptr;
 }
 
 const char **ResourceBlockDescriptor::getFieldPropertyNames(int field) const
@@ -411,6 +429,7 @@ std::string ResourceBlockDescriptor::getFieldValueAsString(void *object, int fie
     ResourceBlock *pp = (ResourceBlock *)object; (void)pp;
     switch (field) {
         case 0: return long2string(pp->getSenderId());
+        case 1: return long2string(pp->getSize());
         default: return "";
     }
 }
@@ -426,6 +445,7 @@ bool ResourceBlockDescriptor::setFieldValueAsString(void *object, int field, int
     ResourceBlock *pp = (ResourceBlock *)object; (void)pp;
     switch (field) {
         case 0: pp->setSenderId(string2long(value)); return true;
+        case 1: pp->setSize(string2long(value)); return true;
         default: return false;
     }
 }

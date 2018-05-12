@@ -89,6 +89,7 @@ ResourceBlock** Transceiver::commandEncode(DataPacket *data, int &totalRBs)
     {
         RBList[i] = new ResourceBlock("RB");
         RBList[i]->setSenderId(senderId);
+        RBList[i]->setSize(bitsPerRB);
 
         /* drop ownership of message */
         drop(RBList[i]);

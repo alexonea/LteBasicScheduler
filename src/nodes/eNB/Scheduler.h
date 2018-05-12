@@ -31,8 +31,9 @@ private:
     SchedulingScheme *_schedulingScheme;
     UserInfo *_userInfo;
     UserInfoInterface **_userManager;
+    simsignal_t *_signalUserAllocation;
 
-    static void _readUserInfo();
+    void _readUserInfo();
 protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);

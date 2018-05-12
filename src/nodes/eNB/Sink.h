@@ -20,14 +20,25 @@
 
 using namespace omnetpp;
 
-/**
- * TODO - Generated class
- */
+typedef struct _UserStats
+{
+    unsigned long int totalRBs;
+    unsigned long int bitsSinceLastTimeUnit;
+    double instDatarate;
+    unsigned int lastRBTimestamp;
+} UserStats;
+
 class Sink : public cSimpleModule
 {
-  protected:
+protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
+    virtual void finish();
+private:
+    unsigned int _numUsers;
+    double _statsUpdateCycle;
+    UserStats *_userStats;
+    simsignal_t *_signalUserRBs;
 };
 
 #endif

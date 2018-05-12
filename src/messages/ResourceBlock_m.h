@@ -24,6 +24,7 @@
  * packet ResourceBlock
  * {
  *     int senderId;
+ *     int size;
  * }
  * </pre>
  */
@@ -31,6 +32,7 @@ class ResourceBlock : public ::omnetpp::cPacket
 {
   protected:
     int senderId;
+    int size;
 
   private:
     void copy(const ResourceBlock& other);
@@ -51,6 +53,8 @@ class ResourceBlock : public ::omnetpp::cPacket
     // field getter/setter methods
     virtual int getSenderId() const;
     virtual void setSenderId(int senderId);
+    virtual int getSize() const;
+    virtual void setSize(int size);
 };
 
 inline void doParsimPacking(omnetpp::cCommBuffer *b, const ResourceBlock& obj) {obj.parsimPack(b);}
