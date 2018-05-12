@@ -13,14 +13,14 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include "UserInformationInterface.h"
+#include "UserInfoInterface.h"
 
-UserInformationInterface::UserInformationInterface()
+UserInfoInterface::UserInfoInterface()
 {
     // TODO Auto-generated constructor stub
 }
 
-UserInformationInterface::~UserInformationInterface()
+UserInfoInterface::~UserInfoInterface()
 {
     // TODO Auto-generated destructor stub
 }

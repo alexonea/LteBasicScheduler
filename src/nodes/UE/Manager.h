@@ -18,12 +18,12 @@
 
 #include <omnetpp.h>
 
-#include "../common/UserInformationInterface.h"
+#include "../common/UserInfoInterface.h"
 #include "Queue.h"
 
 using namespace omnetpp;
 
-class Manager : public cSimpleModule, public UserInformationInterface
+class Manager : public cSimpleModule, public UserInfoInterface
 {
 public:
     virtual long int commandReadUserQueueLength() override;

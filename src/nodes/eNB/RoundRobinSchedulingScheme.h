@@ -16,10 +16,10 @@
 #ifndef NODES_ENB_ROUNDROBINSCHEDULINGSCHEME_H_
 #define NODES_ENB_ROUNDROBINSCHEDULINGSCHEME_H_
 
+#include "../common/UserInfoInterface.h"
 #include "SchedulingDecision.h"
 #include "SchedulingScheme.h"
 
-#include "../common/UserInformationInterface.h"
 
 class RoundRobinSchedulingScheme : public SchedulingScheme
 {

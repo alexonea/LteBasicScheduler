@@ -13,8 +13,8 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef NODES_COMMON_USERINFORMATIONINTERFACE_H_
-#define NODES_COMMON_USERINFORMATIONINTERFACE_H_
+#ifndef NODES_COMMON_USERINFOINTERFACE_H_
+#define NODES_COMMON_USERINFOINTERFACE_H_
 
 #include <omnetpp.h>
 
@@ -22,13 +22,13 @@
 
 using namespace omnetpp;
 
-class UserInformationInterface
+class UserInfoInterface
 {
 public:
-    UserInformationInterface();
-    virtual ~UserInformationInterface();
+    UserInfoInterface();
+    virtual ~UserInfoInterface();
 
     virtual long int commandReadUserQueueLength() = 0;
 };
 
-#endif /* NODES_COMMON_USERINFORMATIONINTERFACE_H_ */
+#endif /* NODES_COMMON_USERINFOINTERFACE_H_ */

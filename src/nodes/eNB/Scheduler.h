@@ -18,8 +18,8 @@
 
 #include <omnetpp.h>
 
+#include "../common/UserInfoInterface.h"
 #include "SchedulingScheme.h"
-#include "../common/UserInformationInterface.h"
 
 using namespace omnetpp;
 
@@ -29,8 +29,8 @@ private:
     double _schedCycle;
     int _numConnections;
     SchedulingScheme *_schedulingScheme;
-    UserInfo *_userQueueLength;
-    UserInformationInterface **_userQueueManager;
+    UserInfo *_userInfo;
+    UserInfoInterface **_userManager;
 protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);

@@ -26,15 +26,15 @@ void Scheduler::initialize()
     this->_numConnections = par("size");
 
     this->_schedulingScheme = new RoundRobinSchedulingScheme();
-    this->_userQueueLength = new UserInfo[_numConnections]();
-    this->_userQueueManager = new UserInformationInterface*[_numConnections];
+    this->_userInfo = new UserInfo[_numConnections]();
+    this->_userManager = new UserInfoInterface*[_numConnections];
 
     for (int i = 0; i < _numConnections; i++)
     {
         char path[128];
         sprintf(path, "BasicNetwork.n[%d].manager", i);
         cModule *userQueueManager = this->getModuleByPath(path);
-        _userQueueManager[i] = check_and_cast <UserInformationInterface*> (userQueueManager);
+        _userManager[i] = check_and_cast <UserInfoInterface*> (userQueueManager);
     }
 
     cMessage *notification = new cMessage("scheduler");
@@ -49,19 +49,19 @@ void Scheduler::handleMessage(cMessage *msg)
         for (int i = 0; i < _numConnections; i++)
         {
             /* Try to read the user queue length, otherwise set it to N/A */
-            if (_userQueueManager[i] != nullptr)
+            if (_userManager[i] != nullptr)
             {
-                _userQueueLength[i].queueLength = _userQueueManager[i]->commandReadUserQueueLength();
+                _userInfo[i].queueLength = _userManager[i]->commandReadUserQueueLength();
             }
             else
             {
-                _userQueueLength[i].queueLength = USER_QUEUE_LENGTH_NA;
+                _userInfo[i].queueLength = USER_QUEUE_LENGTH_NA;
             }
 
-            EV << "Queue length for user " << i << ": " << _userQueueLength[i].queueLength << endl;
+            EV << "Queue length for user " << i << ": " << _userInfo[i].queueLength << endl;
         }
 
-        SchedulingDecision *decision = _schedulingScheme->schedule(_numConnections, _userQueueLength);
+        SchedulingDecision *decision = _schedulingScheme->schedule(_numConnections, _userInfo);
         if (decision != nullptr)
         {
             for (int i = 0; i < _numConnections; i++)

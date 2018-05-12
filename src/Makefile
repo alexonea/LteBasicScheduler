@@ -35,7 +35,7 @@ OBJS = \
     $O/nodes/UE/Queue.o \
     $O/nodes/UE/RGen.o \
     $O/nodes/UE/Transceiver.o \
-    $O/nodes/common/UserInformationInterface.o \
+    $O/nodes/common/UserInfoInterface.o \
     $O/nodes/eNB/RoundRobinSchedulingScheme.o \
     $O/nodes/eNB/Scheduler.o \
     $O/nodes/eNB/SchedulingDecision.o \
