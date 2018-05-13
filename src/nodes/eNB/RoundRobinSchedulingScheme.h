@@ -24,7 +24,7 @@
 class RoundRobinSchedulingScheme : public SchedulingScheme
 {
 public:
-    RoundRobinSchedulingScheme(int numRBs, int fixedAllocationSize);
+    RoundRobinSchedulingScheme(int numRBs, int numUsers, int fixedAllocationSize);
     virtual ~RoundRobinSchedulingScheme();
 
     virtual SchedulingDecision* schedule(int numUsers, UserInfo *userInfo) override;

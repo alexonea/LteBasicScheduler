@@ -43,6 +43,14 @@ typedef struct _UserRBScore
     }
 } UserRBScore;
 
+struct UserRBScoreComparator
+{
+    inline bool operator() (const UserRBScore& a, const UserRBScore& b)
+    {
+        return (a.score > b.score);
+    }
+};
+
 template<
     class T,
     class Container = std::vector<T>,
@@ -93,16 +101,19 @@ public:
 class ProportionalFairSchedulingScheme: public SchedulingScheme
 {
 public:
-    ProportionalFairSchedulingScheme(int numRBs);
+    ProportionalFairSchedulingScheme(int numRBs, int numUsers);
     virtual ~ProportionalFairSchedulingScheme();
 
     virtual SchedulingDecision* schedule(int numUsers, UserInfo *userInfo) override;
 private:
-    int _numUsers;
     double **_scoreBoard;
     int *_lastAllocationForUser;
     bool *_RBAlreadyAllocated;
+    std::vector<UserRBScore> _scores;
 
+    int _getNthScorePos(int n);
+    void _removeFromScoreList(int n);
+    void _updateScores(UserInfo *userInfo);
     void _resetRBAllocationStatus();
     bool _isAdjacent(int RB, int userId);
 };

@@ -15,7 +15,7 @@
 
 #include "RoundRobinSchedulingScheme.h"
 
-RoundRobinSchedulingScheme::RoundRobinSchedulingScheme(int numRBs, int fixedAllocationSize) : SchedulingScheme(numRBs)
+RoundRobinSchedulingScheme::RoundRobinSchedulingScheme(int numRBs, int numUsers, int fixedAllocationSize) : SchedulingScheme(numRBs, numUsers)
 {
     this->_fixedAllocationSize = fixedAllocationSize;
 }

@@ -15,9 +15,10 @@
 
 #include "SchedulingScheme.h"
 
-SchedulingScheme::SchedulingScheme(int numRBs)
+SchedulingScheme::SchedulingScheme(int numRBs, int numUsers)
 {
     this->_numRBs = numRBs;
+    this->_numUsers = numUsers;
     this->_schedTable = new int[_numRBs];
 }
 

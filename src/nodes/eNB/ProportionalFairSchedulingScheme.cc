@@ -26,12 +26,17 @@ void ProportionalFairSchedulingScheme::_resetRBAllocationStatus()
         _RBAlreadyAllocated[i] = false;
 }
 
-ProportionalFairSchedulingScheme::ProportionalFairSchedulingScheme(int numRBs) : SchedulingScheme(numRBs)
+ProportionalFairSchedulingScheme::ProportionalFairSchedulingScheme(int numRBs, int numUsers) : SchedulingScheme(numRBs, numUsers)
 {
     this->_scoreBoard = new double*[numRBs]();
     this->_RBAlreadyAllocated = new bool[numRBs];
-    this->_numUsers = -1;
-    this->_lastAllocationForUser = nullptr;
+    this->_lastAllocationForUser = new int[numUsers]();
+
+    for (int i = 0; i < numUsers; i++)
+        this->_lastAllocationForUser[i] = 5;
+
+    for (int i = 0; i < _numRBs; i++)
+        this->_scoreBoard[i] = new double[numUsers]();
 }
 
 ProportionalFairSchedulingScheme::~ProportionalFairSchedulingScheme()
@@ -39,15 +44,10 @@ ProportionalFairSchedulingScheme::~ProportionalFairSchedulingScheme()
     delete [] _RBAlreadyAllocated;
 
     for (int i = 0; i < _numRBs; i++)
-    {
-        if (_scoreBoard[i] != nullptr)
-            delete [] _scoreBoard[i];
-    }
+        delete [] _scoreBoard[i];
 
     delete [] _scoreBoard;
-
-    if (_lastAllocationForUser != nullptr)
-        delete [] _lastAllocationForUser;
+    delete [] _lastAllocationForUser;
 }
 
 bool ProportionalFairSchedulingScheme::_isAdjacent(int RB, int userId)
@@ -66,64 +66,56 @@ bool ProportionalFairSchedulingScheme::_isAdjacent(int RB, int userId)
     return notFound;
 }
 
-SchedulingDecision* ProportionalFairSchedulingScheme::schedule(int numUsers, UserInfo *userInfo)
+void ProportionalFairSchedulingScheme::_updateScores(UserInfo *userInfo)
 {
-    if (_numUsers == -1)
-        _numUsers = numUsers;
-
-    if (_numUsers < numUsers)
-    {
-        delete [] _lastAllocationForUser;
-        _lastAllocationForUser = nullptr;
-        _numUsers = numUsers;
-    }
-
-    /* if this is the first schedule cycle, allocate space for internal data */
-    if (_lastAllocationForUser == nullptr)
-    {
-        _lastAllocationForUser = new int[numUsers]();
-
-        for (int i = 0; i < numUsers; i++)
-            _lastAllocationForUser[i] = 5;
-    }
-
-    auto cmp = [](UserRBScore a, UserRBScore b) { if (a.score == b.score) return (a.RB < b.RB); else return (a.score < b.score); };
-    score_priority_queue<UserRBScore, std::vector<UserRBScore>, decltype(cmp)> queue(cmp);
+    _scores.clear();
 
     for (int i = 0; i < _numRBs; i++)
     {
-        if (_scoreBoard[i] == nullptr)
-            _scoreBoard[i] = new double[numUsers]();
-
-        for (int j = 0; j < numUsers; j++)
+        for (int j = 0; j < _numUsers; j++)
         {
+            _scoreBoard[i][j] = userInfo[j].channelQuality[i] * (double) _lastAllocationForUser[j];
+
             if (userInfo[j].queueLength != 0)
-            {
-                _scoreBoard[i][j] = userInfo[j].channelQuality[i] * (double) _lastAllocationForUser[j];
-                queue.push(UserRBScore(j, i, _scoreBoard[i][j]));
-            }
+                _scores.push_back(UserRBScore(j, i, _scoreBoard[i][j]));
         }
     }
 
+    std::sort(_scores.begin(), _scores.end(), UserRBScoreComparator());
+}
+
+int ProportionalFairSchedulingScheme::_getNthScorePos(int n)
+{
+    while (n < _scores.size())
+    {
+        UserRBScore c = _scores[n];
+
+        if (!_RBAlreadyAllocated[c.RB])
+            return n;
+
+        n++;
+    }
+
+    return -1;
+}
+
+void ProportionalFairSchedulingScheme::_removeFromScoreList(int n)
+{
+   if (n >= 0 && n < _scores.size())
+   {
+       _scores.erase(_scores.begin() + n);
+   }
+}
+
+SchedulingDecision* ProportionalFairSchedulingScheme::schedule(int numUsers, UserInfo *userInfo)
+{
+    _updateScores(userInfo);
+
     /* if no user needs to transmit, return null */
-    if (queue.size() == 0)
+    if (_scores.size() == 0)
         return nullptr;
 
     SchedulingDecision *decision = new SchedulingDecision(numUsers);
-
-    /* treat special case in which just one user needs serving */
-    if (queue.size() == _numRBs)
-    {
-        int userId = queue.top().userId;
-
-        for (int i = 0; i < _numRBs; i++)
-        {
-            decision->allocateToUser(userId, i, 0);
-            decision->allocateToUser(userId, i, 1);
-        }
-
-        return decision;
-    }
 
     /*
      * Implementation of riding peak proportional fair uplink scheduling algorithm
@@ -134,20 +126,29 @@ SchedulingDecision* ProportionalFairSchedulingScheme::schedule(int numUsers, Use
     {
         _resetRBAllocationStatus();
 
+        if (_scores.size() == 0)
+            _updateScores(userInfo);
+
         int leftRBs = _numRBs;
         int k = 0;
 
         while (leftRBs > 0)
         {
-            UserRBScore current = queue.get(k);
+            int pos = _getNthScorePos(k);
+            if (pos < 0)
+            {
+                EV << "This should not happen!" << endl;
+                break;
+            }
+
+            UserRBScore current = _scores[pos];
 
             if (_isAdjacent(current.RB, current.userId))
             {
                 _schedTable[current.RB] = current.userId;
                 _RBAlreadyAllocated[current.RB] = true;
 
-                queue.removeAllForRB(current.RB);
-                /* queue.remove(current); */
+                _removeFromScoreList(pos);
 
                 k = 0;
                 leftRBs--;
