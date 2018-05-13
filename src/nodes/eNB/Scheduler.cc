@@ -19,6 +19,7 @@
 
 #include "../../messages/ResourceAllocation_m.h"
 #include "RoundRobinSchedulingScheme.h"
+#include "ProportionalFairSchedulingScheme.h"
 
 Define_Module(Scheduler);
 
@@ -28,7 +29,8 @@ void Scheduler::initialize()
     this->_schedCycle = par("schedCycle");
     this->_numConnections = par("size");
 
-    this->_schedulingScheme = new RoundRobinSchedulingScheme(_numRBs, 7);
+    /* this->_schedulingScheme = new RoundRobinSchedulingScheme(_numRBs, 7); */
+    this->_schedulingScheme = new ProportionalFairSchedulingScheme(_numRBs);
     this->_userInfo = new UserInfo[_numConnections]();
     this->_userManager = new UserInfoInterface*[_numConnections];
     this->_signalUserAllocation = new simsignal_t[_numConnections]();
@@ -53,7 +55,7 @@ void Scheduler::initialize()
 
         this->_channelQuality[i] = new double[_numRBs]();
         for (int j = 0; j < _numRBs; j++)
-            _channelQuality[i][j] = 1.0;
+            _channelQuality[i][j] = 0.5;
 
         this->_userInfo[i].channelQuality = _channelQuality[i];
     }
