@@ -48,10 +48,26 @@ template<
     class Container = std::vector<T>,
     class Compare = std::less<typename Container::value_type>
 >
-class score_priority_queue : public std::priority_queue<T, Container, Compare>
+class score_priority_queue : public std::priority_queue<UserRBScore, Container, Compare>
 {
 public:
-    explicit score_priority_queue(const Compare& x) : std::priority_queue<T, Container, Compare>(x) {};
+    explicit score_priority_queue(const Compare& x) : std::priority_queue<UserRBScore, Container, Compare>(x) {};
+
+    bool removeAllForRB(int RB)
+    {
+        std::vector<std::vector<UserRBScore>::iterator> toErase;
+        for (auto it = this->c.begin(); it != this->c.end(); ++it)
+        {
+            if (it->RB == RB)
+                toErase.push_back(it);
+        }
+
+        for (auto it : toErase)
+            this->c.erase(it);
+
+        std::make_heap(this->c.begin(), this->c.end(), this->comp);
+        return true;
+    }
 
     bool remove(const T& value)
     {
@@ -68,7 +84,7 @@ public:
         }
     }
 
-    const T& get(int index)
+    const UserRBScore& get(int index)
     {
         return this->c[index];
     }
@@ -85,8 +101,10 @@ private:
     int _numUsers;
     double **_scoreBoard;
     int *_lastAllocationForUser;
+    bool *_RBAlreadyAllocated;
 
-    static bool _isAdjacent(SchUserAllocation allocation, int RB, int timeslot);
+    void _resetRBAllocationStatus();
+    bool _isAdjacent(int RB, int userId);
 };
 
 #endif /* NODES_ENB_PROPORTIONALFAIRSCHEDULINGSCHEME_H_ */

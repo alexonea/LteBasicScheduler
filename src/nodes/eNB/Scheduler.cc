@@ -133,7 +133,7 @@ void Scheduler::handleMessage(cMessage *msg)
                     EV << "Allocation for user " << i << ": ";
                     for (int j = 0; j < userAllocation.count; j++)
                     {
-                        EV << userAllocation.RBs[j].RB << " ";
+                        EV << "(RB: " << userAllocation.RBs[j].RB << ", t: " << userAllocation.RBs[j].timeslot << ") ";
                         gridAllocation.push_back(userAllocation.RBs[j].RB);
                     }
                     EV << endl;

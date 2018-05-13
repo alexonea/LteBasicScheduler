@@ -20,15 +20,24 @@
 
 using namespace omnetpp;
 
+void ProportionalFairSchedulingScheme::_resetRBAllocationStatus()
+{
+    for (int i = 0; i < _numRBs; i++)
+        _RBAlreadyAllocated[i] = false;
+}
+
 ProportionalFairSchedulingScheme::ProportionalFairSchedulingScheme(int numRBs) : SchedulingScheme(numRBs)
 {
     this->_scoreBoard = new double*[numRBs]();
+    this->_RBAlreadyAllocated = new bool[numRBs];
     this->_numUsers = -1;
     this->_lastAllocationForUser = nullptr;
 }
 
 ProportionalFairSchedulingScheme::~ProportionalFairSchedulingScheme()
 {
+    delete [] _RBAlreadyAllocated;
+
     for (int i = 0; i < _numRBs; i++)
     {
         if (_scoreBoard[i] != nullptr)
@@ -41,15 +50,20 @@ ProportionalFairSchedulingScheme::~ProportionalFairSchedulingScheme()
         delete [] _lastAllocationForUser;
 }
 
-bool ProportionalFairSchedulingScheme::_isAdjacent(SchUserAllocation allocation, int RB, int timeslot)
+bool ProportionalFairSchedulingScheme::_isAdjacent(int RB, int userId)
 {
-    for (int i = 0; i < allocation.count; i++)
+    bool notFound = true;
+    for (int i = 0; i < _numRBs; i++)
     {
-        if (allocation.RBs[i].timeslot == timeslot && abs(allocation.RBs[i].RB - RB) == 1)
-            return true;
+        if (_RBAlreadyAllocated[i] && _schedTable[i] == userId)
+        {
+            notFound = false;
+            if (abs(RB - i) == 1)
+                return true;
+        }
     }
 
-    return false;
+    return notFound;
 }
 
 SchedulingDecision* ProportionalFairSchedulingScheme::schedule(int numUsers, UserInfo *userInfo)
@@ -97,6 +111,20 @@ SchedulingDecision* ProportionalFairSchedulingScheme::schedule(int numUsers, Use
 
     SchedulingDecision *decision = new SchedulingDecision(numUsers);
 
+    /* treat special case in which just one user needs serving */
+    if (queue.size() == _numRBs)
+    {
+        int userId = queue.top().userId;
+
+        for (int i = 0; i < _numRBs; i++)
+        {
+            decision->allocateToUser(userId, i, 0);
+            decision->allocateToUser(userId, i, 1);
+        }
+
+        return decision;
+    }
+
     /*
      * Implementation of riding peak proportional fair uplink scheduling algorithm
      * http://staff.cs.upt.ro/~todinca/mcs/Articles/Lte/ucla_3gpplteuplink.pdf
@@ -104,41 +132,22 @@ SchedulingDecision* ProportionalFairSchedulingScheme::schedule(int numUsers, Use
 
     for (int timeslot = 0; timeslot < 2; timeslot++)
     {
-        bool *alreadyAllocated = new bool[_numRBs]();
-        for (int i = 0; i < _numRBs; i++)
-            alreadyAllocated[i] = false;
+        _resetRBAllocationStatus();
 
         int leftRBs = _numRBs;
         int k = 0;
 
         while (leftRBs > 0)
         {
-            UserRBScore current;
-            int q = k;
+            UserRBScore current = queue.get(k);
 
-            do
+            if (_isAdjacent(current.RB, current.userId))
             {
-                if (q >= queue.size())
-                    break;
+                _schedTable[current.RB] = current.userId;
+                _RBAlreadyAllocated[current.RB] = true;
 
-                current = queue.get(q);
-                if (!alreadyAllocated[current.RB])
-                    break;
-
-                q++;
-            } while (alreadyAllocated[current.RB]);
-
-            if (q == queue.size())
-            {
-                break;
-            }
-
-            SchUserAllocation currentAllocation = decision->getAllocationForUser(current.userId);
-
-            if (_isAdjacent(currentAllocation, current.RB, timeslot) || currentAllocation.count == 0)
-            {
-                decision->allocateToUser(current.userId, current.RB, timeslot);
-                queue.remove(current);
+                queue.removeAllForRB(current.RB);
+                /* queue.remove(current); */
 
                 k = 0;
                 leftRBs--;
@@ -154,7 +163,10 @@ SchedulingDecision* ProportionalFairSchedulingScheme::schedule(int numUsers, Use
             }
         }
 
-        delete [] alreadyAllocated;
+        for (int i = 0; i < _numRBs; i++)
+        {
+            decision->allocateToUser(_schedTable[i], i, timeslot);
+        }
     }
 
     return decision;
