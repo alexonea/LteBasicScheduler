@@ -29,9 +29,9 @@ network BasicNetwork
         eNodeB : eNB { maxConnections = size; };
         configurator: Configurator { networkSize = size; };
     connections:
-        for i = 0..(size - 1)
-        {
-			//n[i].ctrl <--> { delay = uniform(10us, 100us); } <--> eNodeB.ctrl++;
-			n[i].data --> { delay = uniform(10us, 100us); } --> eNodeB.ulink++;
-        }
+        //for i = 0..(size - 1)
+        //{
+		//	n[i].ctrl <--> { delay = uniform(10us, 100us); } <--> eNodeB.ctrl++;
+		//	n[i].data --> { delay = uniform(10us, 100us); } --> eNodeB.ulink++;
+        //}
 }

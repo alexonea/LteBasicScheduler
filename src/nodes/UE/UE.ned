@@ -19,7 +19,7 @@ module UE
 {
     gates:
         inout ctrl @directIn;
-        output data;
+        output data @loose;
 
     submodules:
         source : RGen;

@@ -17,10 +17,10 @@
 #define __LTEBASICSCHEDULER_QUEUE_H_
 
 #include <omnetpp.h>
-
-#include "../../messages/ResourceBlock_m.h"
-
 #include <queue>
+
+#include "../configurator/ConfiguratorInterface.h"
+#include "../../messages/ResourceBlock_m.h"
 
 using namespace omnetpp;
 
@@ -32,6 +32,7 @@ public:
     int commandQueue(ResourceBlock **RBs, int numItems = 1);
 private:
     std::queue<ResourceBlock *> _queueData;
+    ConfiguratorInterface *_config;
 protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);

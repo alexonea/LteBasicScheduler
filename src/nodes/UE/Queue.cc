@@ -23,6 +23,7 @@ Define_Module(Queue);
 
 void Queue::initialize()
 {
+    this->_config = ConfiguratorInterface::commandGetConfiguratorInstance(this);
 }
 
 void Queue::handleMessage(cMessage *msg)
@@ -84,7 +85,21 @@ int Queue::commandDequeue(int numItems, std::vector<int> allocation)
         rb->setChannelQuality(par("channelQuality"));
 
         drop(rb);
-        send(rb, "out");
+
+        if (_config != nullptr)
+        {
+            sendDirect(rb, _config->commandGetENBUplinkEndpoint(rb->getSenderId()));
+        }
+        else
+        {
+            /*
+             * We need to first create the connection and then send.
+             * For now, error
+             */
+
+            error("Connection not established, cannot send");
+            /* send(rb, "out"); */
+        }
 
         count++;
     }
