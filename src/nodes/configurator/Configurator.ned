@@ -13,25 +13,10 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package ltebasicscheduler.networks;
+package ltebasicscheduler.nodes.configurator;
 
-import ltebasicscheduler.nodes.UE.*;
-import ltebasicscheduler.nodes.eNB.*;
-import ltebasicscheduler.nodes.configurator.*;
-
-network BasicNetwork
+simple Configurator
 {
     parameters:
-        int size = default(10);
-        int bandwidth = default(20) @units(MHz);
-    submodules:
-        n[size] : UE;
-        eNodeB : eNB { maxConnections = size; };
-        configurator: Configurator { networkSize = size; };
-    connections:
-        for i = 0..(size - 1)
-        {
-			n[i].ctrl <--> { delay = uniform(10us, 100us); } <--> eNodeB.ctrl++;
-			n[i].data --> { delay = uniform(10us, 100us); } --> eNodeB.ulink++;
-        }
+        int networkSize = default(10);
 }

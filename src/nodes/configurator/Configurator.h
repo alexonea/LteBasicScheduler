@@ -13,25 +13,28 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package ltebasicscheduler.networks;
+#ifndef __LTEBASICSCHEDULER_CONFIGURATOR_H_
+#define __LTEBASICSCHEDULER_CONFIGURATOR_H_
 
-import ltebasicscheduler.nodes.UE.*;
-import ltebasicscheduler.nodes.eNB.*;
-import ltebasicscheduler.nodes.configurator.*;
+#include <omnetpp.h>
 
-network BasicNetwork
+using namespace omnetpp;
+
+
+class Configurator : public cSimpleModule
 {
-    parameters:
-        int size = default(10);
-        int bandwidth = default(20) @units(MHz);
-    submodules:
-        n[size] : UE;
-        eNodeB : eNB { maxConnections = size; };
-        configurator: Configurator { networkSize = size; };
-    connections:
-        for i = 0..(size - 1)
-        {
-			n[i].ctrl <--> { delay = uniform(10us, 100us); } <--> eNodeB.ctrl++;
-			n[i].data --> { delay = uniform(10us, 100us); } --> eNodeB.ulink++;
-        }
-}
+public:
+    cGate* commandGetENBControlEndpoint(int userId);
+    cGate* commandGetENBUplinkEndpoint(int userId);
+    cGate* commandGetUserControlEndpoint(int userId);
+    cGate* commandGetUserDownlinkEndpoint(int userId);
+protected:
+    virtual void initialize() override;
+    virtual void finish() override;
+private:
+    int _netSize;
+    cModule *_eNodeB;
+    cModule **_users;
+};
+
+#endif
