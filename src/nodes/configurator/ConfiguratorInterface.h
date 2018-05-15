@@ -30,6 +30,8 @@ public:
     virtual cGate* commandGetENBUplinkEndpoint(int userId) = 0;
     virtual cGate* commandGetUserControlEndpoint(int userId) = 0;
     virtual cGate* commandGetUserDownlinkEndpoint(int userId) = 0;
+
+    static ConfiguratorInterface* commandGetConfiguratorInstance(cModule *current);
 };
 
 #endif /* NODES_CONFIGURATOR_CONFIGURATORINTERFACE_H_ */

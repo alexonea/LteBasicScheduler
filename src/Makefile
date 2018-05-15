@@ -37,6 +37,7 @@ OBJS = \
     $O/nodes/UE/Transceiver.o \
     $O/nodes/common/UserInfoInterface.o \
     $O/nodes/configurator/Configurator.o \
+    $O/nodes/configurator/ConfiguratorInterface.o \
     $O/nodes/eNB/ProportionalFairSchedulingScheme.o \
     $O/nodes/eNB/RoundRobinSchedulingScheme.o \
     $O/nodes/eNB/Scheduler.o \

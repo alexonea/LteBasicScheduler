@@ -71,12 +71,8 @@ void Scheduler::initialize()
         this->_userInfo[i].channelQuality = _channelQuality[i];
     }
 
-    /* Access the root module of the simulation i.e. the network module */
-    cModule *root = this;
-    while (root->getParentModule() != nullptr)
-        root = root->getParentModule();
-
-    this->_config = check_and_cast <ConfiguratorInterface *> (root->getSubmodule("configurator"));
+    /* Access the configurator instance */
+    this->_config = ConfiguratorInterface::commandGetConfiguratorInstance(this);
 
     cMessage *notification = new cMessage("scheduler");
     scheduleAt(simTime() + _schedCycle, notification);
