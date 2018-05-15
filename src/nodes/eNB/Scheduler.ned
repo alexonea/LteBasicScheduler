@@ -24,5 +24,5 @@ simple Scheduler
         @statisticTemplate[user-allocation] (record=vector);
         int schedulingScheme;
     gates:
-        inout ctrl[size] @loose;
+        inout ctrl[size] @directIn;
 }

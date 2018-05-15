@@ -35,7 +35,7 @@ cGate* Configurator::commandGetENBControlEndpoint(int userId)
     if (_eNodeB == nullptr)
         return nullptr;
 
-    return _eNodeB->gate("ctrl", userId);
+    return _eNodeB->gate("ctrl$i", userId);
 }
 
 cGate* Configurator::commandGetENBUplinkEndpoint(int userId)
@@ -51,7 +51,7 @@ cGate* Configurator::commandGetUserControlEndpoint(int userId)
     if (_users[userId] == nullptr)
         return nullptr;
 
-    return _users[userId]->gate("ctrl");
+    return _users[userId]->gate("ctrl$i");
 }
 
 cGate* Configurator::commandGetUserDownlinkEndpoint(int userId)

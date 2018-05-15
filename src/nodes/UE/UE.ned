@@ -18,7 +18,7 @@ package ltebasicscheduler.nodes.UE;
 module UE
 {
     gates:
-        inout ctrl;
+        inout ctrl @directIn;
         output data;
 
     submodules:

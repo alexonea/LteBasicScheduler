@@ -71,6 +71,13 @@ void Scheduler::initialize()
         this->_userInfo[i].channelQuality = _channelQuality[i];
     }
 
+    /* Access the root module of the simulation i.e. the network module */
+    cModule *root = this;
+    while (root->getParentModule() != nullptr)
+        root = root->getParentModule();
+
+    this->_config = check_and_cast <ConfiguratorInterface *> (root->getSubmodule("configurator"));
+
     cMessage *notification = new cMessage("scheduler");
     scheduleAt(simTime() + _schedCycle, notification);
 }
@@ -152,7 +159,21 @@ void Scheduler::handleMessage(cMessage *msg)
                     ctrl->setNumRBsToSend(userAllocation.count);
                     ctrl->setGridAllocation(gridAllocation);
 
-                    send(ctrl, this->gate("ctrl$o", i));
+                    /* Try to send data through wireless link */
+                    if (_config != nullptr)
+                    {
+                        sendDirect(ctrl, _config->commandGetUserControlEndpoint(i));
+                    }
+                    else
+                    {
+                        /*
+                         * Need to create the physical connection before sending.
+                         * For now, report an error. Normally this should not happen.
+                         */
+
+                        error("Unable to send! Critical error!");
+                        /* send(ctrl, this->gate("ctrl$o", i)); */
+                    }
                 }
 
                 emit(_signalUserAllocation[i], (unsigned long int) userAllocation.count);

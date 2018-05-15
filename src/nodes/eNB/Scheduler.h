@@ -19,6 +19,7 @@
 #include <omnetpp.h>
 
 #include "../common/UserInfoInterface.h"
+#include "../configurator/ConfiguratorInterface.h"
 #include "SchedulingScheme.h"
 #include "ChannelQualityReportingInterface.h"
 
@@ -35,6 +36,7 @@ private:
     UserInfoInterface **_userManager;
     simsignal_t *_signalUserAllocation;
     double **_channelQuality;
+    ConfiguratorInterface *_config;
 
     void _readUserInfo();
     void _printChannelQuality();

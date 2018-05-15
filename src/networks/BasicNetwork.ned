@@ -31,7 +31,7 @@ network BasicNetwork
     connections:
         for i = 0..(size - 1)
         {
-			n[i].ctrl <--> { delay = uniform(10us, 100us); } <--> eNodeB.ctrl++;
+			//n[i].ctrl <--> { delay = uniform(10us, 100us); } <--> eNodeB.ctrl++;
 			n[i].data --> { delay = uniform(10us, 100us); } --> eNodeB.ulink++;
         }
 }
