@@ -25,8 +25,8 @@ network BasicNetwork
         int size = default(10);
         int bandwidth = default(20) @units(MHz);
     submodules:
-        n[size] : UE;
-        eNodeB : eNB { maxConnections = size; };
+        n[size] : UE { @display("p=200,200,ri,200,200"); };
+        eNodeB : eNB { maxConnections = size; @display("p=400,400"); };
         configurator: Configurator { networkSize = size; };
     connections:
         //for i = 0..(size - 1)

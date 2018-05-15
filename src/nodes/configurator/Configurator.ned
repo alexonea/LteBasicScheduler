@@ -18,5 +18,6 @@ package ltebasicscheduler.nodes.configurator;
 simple Configurator
 {
     parameters:
+        @display("i=block/cogwheel");
         int networkSize = default(10);
 }

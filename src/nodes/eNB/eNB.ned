@@ -18,6 +18,7 @@ package ltebasicscheduler.nodes.eNB;
 module eNB
 {
 	parameters:
+	    @display("i=device/antennatower");
 		int maxConnections = default(100);
 		int schedulingScheme = default(0);	// use 0 for round-robin, 1 for proportional-fair
 		scheduler.schedulingScheme = schedulingScheme;
