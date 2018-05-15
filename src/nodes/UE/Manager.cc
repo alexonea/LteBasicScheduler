@@ -20,12 +20,9 @@
 
 Define_Module(Manager);
 
-int Manager::count = 0;
-
 void Manager::initialize()
 {
     cModule *queueModule = this->getParentModule()->getSubmodule("queue");
-    this->_id = count++;
     this->_queueManager = check_and_cast <Queue *> (queueModule);
 }
 
@@ -53,7 +50,6 @@ void Manager::handleMessage(cMessage *msg)
                 send(req, "queueRequest");
             }
 
-            EV << "User " << _id << " allowed to transmit " << allowance << " RBs in current scheduling cycle\n";
             delete ctrl;
         }
     }

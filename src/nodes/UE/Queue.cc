@@ -88,7 +88,8 @@ int Queue::commandDequeue(int numItems, std::vector<int> allocation)
 
         if (_config != nullptr)
         {
-            sendDirect(rb, _config->commandGetENBUplinkEndpoint(rb->getSenderId()));
+            simtime_t delay = uniform(0.00001, 0.0001);
+            sendDirect(rb, delay, delay, _config->commandGetENBUplinkEndpoint(rb->getSenderId()));
         }
         else
         {

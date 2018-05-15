@@ -28,6 +28,8 @@ private:
     double _nextEventOffset;
     int _defaultPacketSize;
     Transceiver *_transcieverManager;
+    static int count;
+    int _id;
 protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);

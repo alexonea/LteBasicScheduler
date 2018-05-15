@@ -64,7 +64,7 @@ void Sink::handleMessage(cMessage *msg)
     else if (msg->arrivedOn("drain"))
     {
         ResourceBlock *rb = static_cast <ResourceBlock *> (msg);
-        unsigned int userId = rb->getArrivalGate()->getIndex();
+        unsigned int userId = rb->getSenderId();
 
         _userStats[userId].totalRBs ++;
         _userStats[userId].bitsSinceLastTimeUnit += rb->getSize();
