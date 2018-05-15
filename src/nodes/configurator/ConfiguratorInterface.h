@@ -13,29 +13,23 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef __LTEBASICSCHEDULER_CONFIGURATOR_H_
-#define __LTEBASICSCHEDULER_CONFIGURATOR_H_
+#ifndef NODES_CONFIGURATOR_CONFIGURATORINTERFACE_H_
+#define NODES_CONFIGURATOR_CONFIGURATORINTERFACE_H_
 
 #include <omnetpp.h>
 
-#include "ConfiguratorInterface.h"
-
 using namespace omnetpp;
 
-class Configurator : public cSimpleModule, public ConfiguratorInterface
+class ConfiguratorInterface
 {
 public:
-    virtual cGate* commandGetENBControlEndpoint(int userId) override;
-    virtual cGate* commandGetENBUplinkEndpoint(int userId) override;
-    virtual cGate* commandGetUserControlEndpoint(int userId) override;
-    virtual cGate* commandGetUserDownlinkEndpoint(int userId) override;
-protected:
-    virtual void initialize() override;
-    virtual void finish() override;
-private:
-    int _netSize;
-    cModule *_eNodeB;
-    cModule **_users;
+    ConfiguratorInterface() {};
+    virtual ~ConfiguratorInterface() {};
+
+    virtual cGate* commandGetENBControlEndpoint(int userId) = 0;
+    virtual cGate* commandGetENBUplinkEndpoint(int userId) = 0;
+    virtual cGate* commandGetUserControlEndpoint(int userId) = 0;
+    virtual cGate* commandGetUserDownlinkEndpoint(int userId) = 0;
 };
 
-#endif
+#endif /* NODES_CONFIGURATOR_CONFIGURATORINTERFACE_H_ */
