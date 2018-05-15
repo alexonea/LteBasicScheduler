@@ -22,6 +22,7 @@ simple Scheduler
         double schedCycle = 0.001 @units(s);
         @signal[user*-allocation] (type=unsigned long);
         @statisticTemplate[user-allocation] (record=vector);
+        int schedulingScheme;
     gates:
         inout ctrl[size] @loose;
 }

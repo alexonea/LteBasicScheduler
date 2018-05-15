@@ -19,6 +19,8 @@ module eNB
 {
 	parameters:
 		int maxConnections = default(100);
+		int schedulingScheme = default(0);	// use 0 for round-robin, 1 for proportional-fair
+		scheduler.schedulingScheme = schedulingScheme;
 	gates:
 		inout ctrl[maxConnections] @loose;
 		input ulink[maxConnections] @loose;

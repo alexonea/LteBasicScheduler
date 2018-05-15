@@ -29,8 +29,19 @@ void Scheduler::initialize()
     this->_schedCycle = par("schedCycle");
     this->_numConnections = par("size");
 
-    /* this->_schedulingScheme = new RoundRobinSchedulingScheme(_numRBs, _numConnections, 7); */
-    this->_schedulingScheme = new ProportionalFairSchedulingScheme(_numRBs, _numConnections);
+    int schedulingScheme = par("schedulingScheme");
+
+    switch (schedulingScheme)
+    {
+    default:
+    case 0:
+        this->_schedulingScheme = new RoundRobinSchedulingScheme(_numRBs, _numConnections, 7);
+        break;
+    case 1:
+        this->_schedulingScheme = new ProportionalFairSchedulingScheme(_numRBs, _numConnections);
+        break;
+    }
+
     this->_userInfo = new UserInfo[_numConnections]();
     this->_userManager = new UserInfoInterface*[_numConnections];
     this->_signalUserAllocation = new simsignal_t[_numConnections]();
