@@ -34,9 +34,9 @@ private:
     std::queue<ResourceBlock *> _queueData;
     ConfiguratorInterface *_config;
 protected:
-    virtual void initialize();
-    virtual void handleMessage(cMessage *msg);
-    virtual void finish();
+    virtual void initialize() override;
+    virtual void handleMessage(cMessage *msg) override;
+    virtual void finish() override;
 };
 
 #endif

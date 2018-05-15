@@ -31,8 +31,8 @@ private:
     int _bandwidth;
     Queue *_queueManager;
 protected:
-    virtual void initialize();
-    virtual void handleMessage(cMessage *msg);
+    virtual void initialize() override;
+    virtual void handleMessage(cMessage *msg) override;
 public:
     ResourceBlock** commandEncode(DataPacket *data, int &totalRBs);
 };
