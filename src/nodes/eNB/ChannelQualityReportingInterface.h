@@ -13,28 +13,16 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef __LTEBASICSCHEDULER_TRANSCIEVER_H_
-#define __LTEBASICSCHEDULER_TRANSCIEVER_H_
+#ifndef NODES_ENB_CHANNELQUALITYREPORTINGINTERFACE_H_
+#define NODES_ENB_CHANNELQUALITYREPORTINGINTERFACE_H_
 
-#include <omnetpp.h>
-
-#include "Queue.h"
-#include "../../messages/DataPacket_m.h"
-#include "../../messages/ResourceBlock_m.h"
-
-using namespace omnetpp;
-
-class Transceiver : public cSimpleModule
+class ChannelQualityReportingInterface
 {
-private:
-    int _symbolsPerRE;
-    int _bandwidth;
-    Queue *_queueManager;
-protected:
-    virtual void initialize() override;
-    virtual void handleMessage(cMessage *msg) override;
 public:
-    ResourceBlock** commandEncode(DataPacket *data, int &totalRBs);
+    ChannelQualityReportingInterface() {};
+    virtual ~ChannelQualityReportingInterface() {};
+
+    virtual void commandUpdateChannelQuality(int userId, int RB, double value) = 0;
 };
 
-#endif
+#endif /* NODES_ENB_CHANNELQUALITYREPORTINGINTERFACE_H_ */

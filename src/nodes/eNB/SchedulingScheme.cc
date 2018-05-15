@@ -15,12 +15,14 @@
 
 #include "SchedulingScheme.h"
 
-SchedulingScheme::SchedulingScheme()
+SchedulingScheme::SchedulingScheme(int numRBs, int numUsers)
 {
-    // TODO Auto-generated constructor stub
+    this->_numRBs = numRBs;
+    this->_numUsers = numUsers;
+    this->_schedTable = new int[_numRBs];
 }
 
 SchedulingScheme::~SchedulingScheme()
 {
-    // TODO Auto-generated destructor stub
+    delete [] _schedTable;
 }

@@ -1,5 +1,5 @@
 //
-// Generated file, do not edit! Created by nedtool 5.3 from messages/ResourceBlock.msg.
+// Generated file, do not edit! Created by nedtool 5.3 from nodes/eNB/../../messages/ResourceBlock.msg.
 //
 
 // Disable warnings about unused variables, empty switch stmts, etc:
@@ -183,6 +183,8 @@ ResourceBlock::ResourceBlock(const char *name, short kind) : ::omnetpp::cPacket(
 {
     this->senderId = 0;
     this->size = 0;
+    this->resourceGridId = 0;
+    this->channelQuality = 0;
 }
 
 ResourceBlock::ResourceBlock(const ResourceBlock& other) : ::omnetpp::cPacket(other)
@@ -206,6 +208,8 @@ void ResourceBlock::copy(const ResourceBlock& other)
 {
     this->senderId = other.senderId;
     this->size = other.size;
+    this->resourceGridId = other.resourceGridId;
+    this->channelQuality = other.channelQuality;
 }
 
 void ResourceBlock::parsimPack(omnetpp::cCommBuffer *b) const
@@ -213,6 +217,8 @@ void ResourceBlock::parsimPack(omnetpp::cCommBuffer *b) const
     ::omnetpp::cPacket::parsimPack(b);
     doParsimPacking(b,this->senderId);
     doParsimPacking(b,this->size);
+    doParsimPacking(b,this->resourceGridId);
+    doParsimPacking(b,this->channelQuality);
 }
 
 void ResourceBlock::parsimUnpack(omnetpp::cCommBuffer *b)
@@ -220,6 +226,8 @@ void ResourceBlock::parsimUnpack(omnetpp::cCommBuffer *b)
     ::omnetpp::cPacket::parsimUnpack(b);
     doParsimUnpacking(b,this->senderId);
     doParsimUnpacking(b,this->size);
+    doParsimUnpacking(b,this->resourceGridId);
+    doParsimUnpacking(b,this->channelQuality);
 }
 
 int ResourceBlock::getSenderId() const
@@ -240,6 +248,26 @@ int ResourceBlock::getSize() const
 void ResourceBlock::setSize(int size)
 {
     this->size = size;
+}
+
+int ResourceBlock::getResourceGridId() const
+{
+    return this->resourceGridId;
+}
+
+void ResourceBlock::setResourceGridId(int resourceGridId)
+{
+    this->resourceGridId = resourceGridId;
+}
+
+double ResourceBlock::getChannelQuality() const
+{
+    return this->channelQuality;
+}
+
+void ResourceBlock::setChannelQuality(double channelQuality)
+{
+    this->channelQuality = channelQuality;
 }
 
 class ResourceBlockDescriptor : public omnetpp::cClassDescriptor
@@ -307,7 +335,7 @@ const char *ResourceBlockDescriptor::getProperty(const char *propertyname) const
 int ResourceBlockDescriptor::getFieldCount() const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? 2+basedesc->getFieldCount() : 2;
+    return basedesc ? 4+basedesc->getFieldCount() : 4;
 }
 
 unsigned int ResourceBlockDescriptor::getFieldTypeFlags(int field) const
@@ -321,8 +349,10 @@ unsigned int ResourceBlockDescriptor::getFieldTypeFlags(int field) const
     static unsigned int fieldTypeFlags[] = {
         FD_ISEDITABLE,
         FD_ISEDITABLE,
+        FD_ISEDITABLE,
+        FD_ISEDITABLE,
     };
-    return (field>=0 && field<2) ? fieldTypeFlags[field] : 0;
+    return (field>=0 && field<4) ? fieldTypeFlags[field] : 0;
 }
 
 const char *ResourceBlockDescriptor::getFieldName(int field) const
@@ -336,8 +366,10 @@ const char *ResourceBlockDescriptor::getFieldName(int field) const
     static const char *fieldNames[] = {
         "senderId",
         "size",
+        "resourceGridId",
+        "channelQuality",
     };
-    return (field>=0 && field<2) ? fieldNames[field] : nullptr;
+    return (field>=0 && field<4) ? fieldNames[field] : nullptr;
 }
 
 int ResourceBlockDescriptor::findField(const char *fieldName) const
@@ -346,6 +378,8 @@ int ResourceBlockDescriptor::findField(const char *fieldName) const
     int base = basedesc ? basedesc->getFieldCount() : 0;
     if (fieldName[0]=='s' && strcmp(fieldName, "senderId")==0) return base+0;
     if (fieldName[0]=='s' && strcmp(fieldName, "size")==0) return base+1;
+    if (fieldName[0]=='r' && strcmp(fieldName, "resourceGridId")==0) return base+2;
+    if (fieldName[0]=='c' && strcmp(fieldName, "channelQuality")==0) return base+3;
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
@@ -360,8 +394,10 @@ const char *ResourceBlockDescriptor::getFieldTypeString(int field) const
     static const char *fieldTypeStrings[] = {
         "int",
         "int",
+        "int",
+        "double",
     };
-    return (field>=0 && field<2) ? fieldTypeStrings[field] : nullptr;
+    return (field>=0 && field<4) ? fieldTypeStrings[field] : nullptr;
 }
 
 const char **ResourceBlockDescriptor::getFieldPropertyNames(int field) const
@@ -430,6 +466,8 @@ std::string ResourceBlockDescriptor::getFieldValueAsString(void *object, int fie
     switch (field) {
         case 0: return long2string(pp->getSenderId());
         case 1: return long2string(pp->getSize());
+        case 2: return long2string(pp->getResourceGridId());
+        case 3: return double2string(pp->getChannelQuality());
         default: return "";
     }
 }
@@ -446,6 +484,8 @@ bool ResourceBlockDescriptor::setFieldValueAsString(void *object, int field, int
     switch (field) {
         case 0: pp->setSenderId(string2long(value)); return true;
         case 1: pp->setSize(string2long(value)); return true;
+        case 2: pp->setResourceGridId(string2long(value)); return true;
+        case 3: pp->setChannelQuality(string2double(value)); return true;
         default: return false;
     }
 }

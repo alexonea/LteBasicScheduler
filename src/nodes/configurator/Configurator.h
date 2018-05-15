@@ -13,28 +13,29 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef __LTEBASICSCHEDULER_TRANSCIEVER_H_
-#define __LTEBASICSCHEDULER_TRANSCIEVER_H_
+#ifndef __LTEBASICSCHEDULER_CONFIGURATOR_H_
+#define __LTEBASICSCHEDULER_CONFIGURATOR_H_
 
 #include <omnetpp.h>
 
-#include "Queue.h"
-#include "../../messages/DataPacket_m.h"
-#include "../../messages/ResourceBlock_m.h"
+#include "ConfiguratorInterface.h"
 
 using namespace omnetpp;
 
-class Transceiver : public cSimpleModule
+class Configurator : public cSimpleModule, public ConfiguratorInterface
 {
-private:
-    int _symbolsPerRE;
-    int _bandwidth;
-    Queue *_queueManager;
+public:
+    virtual cGate* commandGetENBControlEndpoint(int userId) override;
+    virtual cGate* commandGetENBUplinkEndpoint(int userId) override;
+    virtual cGate* commandGetUserControlEndpoint(int userId) override;
+    virtual cGate* commandGetUserDownlinkEndpoint(int userId) override;
 protected:
     virtual void initialize() override;
-    virtual void handleMessage(cMessage *msg) override;
-public:
-    ResourceBlock** commandEncode(DataPacket *data, int &totalRBs);
+    virtual void finish() override;
+private:
+    int _netSize;
+    cModule *_eNodeB;
+    cModule **_users;
 };
 
 #endif

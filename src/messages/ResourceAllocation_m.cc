@@ -1,5 +1,5 @@
 //
-// Generated file, do not edit! Created by nedtool 5.3 from messages/ResourceAllocation.msg.
+// Generated file, do not edit! Created by nedtool 5.3 from nodes/UE/../../messages/ResourceAllocation.msg.
 //
 
 // Disable warnings about unused variables, empty switch stmts, etc:
@@ -204,18 +204,21 @@ ResourceAllocation& ResourceAllocation::operator=(const ResourceAllocation& othe
 void ResourceAllocation::copy(const ResourceAllocation& other)
 {
     this->numRBsToSend = other.numRBsToSend;
+    this->gridAllocation = other.gridAllocation;
 }
 
 void ResourceAllocation::parsimPack(omnetpp::cCommBuffer *b) const
 {
     ::omnetpp::cMessage::parsimPack(b);
     doParsimPacking(b,this->numRBsToSend);
+    doParsimPacking(b,this->gridAllocation);
 }
 
 void ResourceAllocation::parsimUnpack(omnetpp::cCommBuffer *b)
 {
     ::omnetpp::cMessage::parsimUnpack(b);
     doParsimUnpacking(b,this->numRBsToSend);
+    doParsimUnpacking(b,this->gridAllocation);
 }
 
 int ResourceAllocation::getNumRBsToSend() const
@@ -226,6 +229,16 @@ int ResourceAllocation::getNumRBsToSend() const
 void ResourceAllocation::setNumRBsToSend(int numRBsToSend)
 {
     this->numRBsToSend = numRBsToSend;
+}
+
+ResourceGridAllocation& ResourceAllocation::getGridAllocation()
+{
+    return this->gridAllocation;
+}
+
+void ResourceAllocation::setGridAllocation(const ResourceGridAllocation& gridAllocation)
+{
+    this->gridAllocation = gridAllocation;
 }
 
 class ResourceAllocationDescriptor : public omnetpp::cClassDescriptor
@@ -293,7 +306,7 @@ const char *ResourceAllocationDescriptor::getProperty(const char *propertyname) 
 int ResourceAllocationDescriptor::getFieldCount() const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? 1+basedesc->getFieldCount() : 1;
+    return basedesc ? 2+basedesc->getFieldCount() : 2;
 }
 
 unsigned int ResourceAllocationDescriptor::getFieldTypeFlags(int field) const
@@ -306,8 +319,9 @@ unsigned int ResourceAllocationDescriptor::getFieldTypeFlags(int field) const
     }
     static unsigned int fieldTypeFlags[] = {
         FD_ISEDITABLE,
+        FD_ISCOMPOUND,
     };
-    return (field>=0 && field<1) ? fieldTypeFlags[field] : 0;
+    return (field>=0 && field<2) ? fieldTypeFlags[field] : 0;
 }
 
 const char *ResourceAllocationDescriptor::getFieldName(int field) const
@@ -320,8 +334,9 @@ const char *ResourceAllocationDescriptor::getFieldName(int field) const
     }
     static const char *fieldNames[] = {
         "numRBsToSend",
+        "gridAllocation",
     };
-    return (field>=0 && field<1) ? fieldNames[field] : nullptr;
+    return (field>=0 && field<2) ? fieldNames[field] : nullptr;
 }
 
 int ResourceAllocationDescriptor::findField(const char *fieldName) const
@@ -329,6 +344,7 @@ int ResourceAllocationDescriptor::findField(const char *fieldName) const
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     int base = basedesc ? basedesc->getFieldCount() : 0;
     if (fieldName[0]=='n' && strcmp(fieldName, "numRBsToSend")==0) return base+0;
+    if (fieldName[0]=='g' && strcmp(fieldName, "gridAllocation")==0) return base+1;
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
@@ -342,8 +358,9 @@ const char *ResourceAllocationDescriptor::getFieldTypeString(int field) const
     }
     static const char *fieldTypeStrings[] = {
         "int",
+        "ResourceGridAllocation",
     };
-    return (field>=0 && field<1) ? fieldTypeStrings[field] : nullptr;
+    return (field>=0 && field<2) ? fieldTypeStrings[field] : nullptr;
 }
 
 const char **ResourceAllocationDescriptor::getFieldPropertyNames(int field) const
@@ -411,6 +428,7 @@ std::string ResourceAllocationDescriptor::getFieldValueAsString(void *object, in
     ResourceAllocation *pp = (ResourceAllocation *)object; (void)pp;
     switch (field) {
         case 0: return long2string(pp->getNumRBsToSend());
+        case 1: {std::stringstream out; out << pp->getGridAllocation(); return out.str();}
         default: return "";
     }
 }
@@ -439,6 +457,7 @@ const char *ResourceAllocationDescriptor::getFieldStructName(int field) const
         field -= basedesc->getFieldCount();
     }
     switch (field) {
+        case 1: return omnetpp::opp_typename(typeid(ResourceGridAllocation));
         default: return nullptr;
     };
 }
@@ -453,8 +472,10 @@ void *ResourceAllocationDescriptor::getFieldStructValuePointer(void *object, int
     }
     ResourceAllocation *pp = (ResourceAllocation *)object; (void)pp;
     switch (field) {
+        case 1: return (void *)(&pp->getGridAllocation()); break;
         default: return nullptr;
     }
 }
+
 
 

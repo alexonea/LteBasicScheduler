@@ -13,6 +13,14 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
+cplusplus
+{{
+    typedef std::vector<int> ResourceGridAllocation;
+}}
+
+class noncobject ResourceGridAllocation;
+
 message QueueControl {
     int dequeue;
+    ResourceGridAllocation allocation;
 }

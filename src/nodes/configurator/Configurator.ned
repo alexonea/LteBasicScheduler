@@ -13,28 +13,11 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef __LTEBASICSCHEDULER_TRANSCIEVER_H_
-#define __LTEBASICSCHEDULER_TRANSCIEVER_H_
+package ltebasicscheduler.nodes.configurator;
 
-#include <omnetpp.h>
-
-#include "Queue.h"
-#include "../../messages/DataPacket_m.h"
-#include "../../messages/ResourceBlock_m.h"
-
-using namespace omnetpp;
-
-class Transceiver : public cSimpleModule
+simple Configurator
 {
-private:
-    int _symbolsPerRE;
-    int _bandwidth;
-    Queue *_queueManager;
-protected:
-    virtual void initialize() override;
-    virtual void handleMessage(cMessage *msg) override;
-public:
-    ResourceBlock** commandEncode(DataPacket *data, int &totalRBs);
-};
-
-#endif
+    parameters:
+        @display("i=block/cogwheel");
+        int networkSize = default(10);
+}

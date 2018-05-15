@@ -1,5 +1,5 @@
 //
-// Generated file, do not edit! Created by nedtool 5.3 from messages/QueueControl.msg.
+// Generated file, do not edit! Created by nedtool 5.3 from nodes/UE/../../messages/QueueControl.msg.
 //
 
 // Disable warnings about unused variables, empty switch stmts, etc:
@@ -204,18 +204,21 @@ QueueControl& QueueControl::operator=(const QueueControl& other)
 void QueueControl::copy(const QueueControl& other)
 {
     this->dequeue = other.dequeue;
+    this->allocation = other.allocation;
 }
 
 void QueueControl::parsimPack(omnetpp::cCommBuffer *b) const
 {
     ::omnetpp::cMessage::parsimPack(b);
     doParsimPacking(b,this->dequeue);
+    doParsimPacking(b,this->allocation);
 }
 
 void QueueControl::parsimUnpack(omnetpp::cCommBuffer *b)
 {
     ::omnetpp::cMessage::parsimUnpack(b);
     doParsimUnpacking(b,this->dequeue);
+    doParsimUnpacking(b,this->allocation);
 }
 
 int QueueControl::getDequeue() const
@@ -226,6 +229,16 @@ int QueueControl::getDequeue() const
 void QueueControl::setDequeue(int dequeue)
 {
     this->dequeue = dequeue;
+}
+
+ResourceGridAllocation& QueueControl::getAllocation()
+{
+    return this->allocation;
+}
+
+void QueueControl::setAllocation(const ResourceGridAllocation& allocation)
+{
+    this->allocation = allocation;
 }
 
 class QueueControlDescriptor : public omnetpp::cClassDescriptor
@@ -293,7 +306,7 @@ const char *QueueControlDescriptor::getProperty(const char *propertyname) const
 int QueueControlDescriptor::getFieldCount() const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? 1+basedesc->getFieldCount() : 1;
+    return basedesc ? 2+basedesc->getFieldCount() : 2;
 }
 
 unsigned int QueueControlDescriptor::getFieldTypeFlags(int field) const
@@ -306,8 +319,9 @@ unsigned int QueueControlDescriptor::getFieldTypeFlags(int field) const
     }
     static unsigned int fieldTypeFlags[] = {
         FD_ISEDITABLE,
+        FD_ISCOMPOUND,
     };
-    return (field>=0 && field<1) ? fieldTypeFlags[field] : 0;
+    return (field>=0 && field<2) ? fieldTypeFlags[field] : 0;
 }
 
 const char *QueueControlDescriptor::getFieldName(int field) const
@@ -320,8 +334,9 @@ const char *QueueControlDescriptor::getFieldName(int field) const
     }
     static const char *fieldNames[] = {
         "dequeue",
+        "allocation",
     };
-    return (field>=0 && field<1) ? fieldNames[field] : nullptr;
+    return (field>=0 && field<2) ? fieldNames[field] : nullptr;
 }
 
 int QueueControlDescriptor::findField(const char *fieldName) const
@@ -329,6 +344,7 @@ int QueueControlDescriptor::findField(const char *fieldName) const
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     int base = basedesc ? basedesc->getFieldCount() : 0;
     if (fieldName[0]=='d' && strcmp(fieldName, "dequeue")==0) return base+0;
+    if (fieldName[0]=='a' && strcmp(fieldName, "allocation")==0) return base+1;
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
@@ -342,8 +358,9 @@ const char *QueueControlDescriptor::getFieldTypeString(int field) const
     }
     static const char *fieldTypeStrings[] = {
         "int",
+        "ResourceGridAllocation",
     };
-    return (field>=0 && field<1) ? fieldTypeStrings[field] : nullptr;
+    return (field>=0 && field<2) ? fieldTypeStrings[field] : nullptr;
 }
 
 const char **QueueControlDescriptor::getFieldPropertyNames(int field) const
@@ -411,6 +428,7 @@ std::string QueueControlDescriptor::getFieldValueAsString(void *object, int fiel
     QueueControl *pp = (QueueControl *)object; (void)pp;
     switch (field) {
         case 0: return long2string(pp->getDequeue());
+        case 1: {std::stringstream out; out << pp->getAllocation(); return out.str();}
         default: return "";
     }
 }
@@ -439,6 +457,7 @@ const char *QueueControlDescriptor::getFieldStructName(int field) const
         field -= basedesc->getFieldCount();
     }
     switch (field) {
+        case 1: return omnetpp::opp_typename(typeid(ResourceGridAllocation));
         default: return nullptr;
     };
 }
@@ -453,6 +472,7 @@ void *QueueControlDescriptor::getFieldStructValuePointer(void *object, int field
     }
     QueueControl *pp = (QueueControl *)object; (void)pp;
     switch (field) {
+        case 1: return (void *)(&pp->getAllocation()); break;
         default: return nullptr;
     }
 }

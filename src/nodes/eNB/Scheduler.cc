@@ -15,20 +15,38 @@
 
 #include "Scheduler.h"
 
+#include <iomanip>
+
 #include "../../messages/ResourceAllocation_m.h"
 #include "RoundRobinSchedulingScheme.h"
+#include "ProportionalFairSchedulingScheme.h"
 
 Define_Module(Scheduler);
 
 void Scheduler::initialize()
 {
+    this->_numRBs = 30;
     this->_schedCycle = par("schedCycle");
     this->_numConnections = par("size");
 
-    this->_schedulingScheme = new RoundRobinSchedulingScheme();
+    int schedulingScheme = par("schedulingScheme");
+
+    switch (schedulingScheme)
+    {
+    default:
+    case 0:
+        this->_schedulingScheme = new RoundRobinSchedulingScheme(_numRBs, _numConnections, 7);
+        break;
+    case 1:
+        this->_schedulingScheme = new ProportionalFairSchedulingScheme(_numRBs, _numConnections);
+        break;
+    }
+
     this->_userInfo = new UserInfo[_numConnections]();
     this->_userManager = new UserInfoInterface*[_numConnections];
     this->_signalUserAllocation = new simsignal_t[_numConnections]();
+
+    this->_channelQuality = new double*[_numConnections];
 
     for (int i = 0; i < _numConnections; i++)
     {
@@ -45,10 +63,30 @@ void Scheduler::initialize()
 
         cProperty *statisticTemplate = this->getProperties()->get("statisticTemplate", "user-allocation");
         getEnvir()->addResultRecorders(this, _signalUserAllocation[i], tmp, statisticTemplate);
+
+        this->_channelQuality[i] = new double[_numRBs]();
+        for (int j = 0; j < _numRBs; j++)
+            _channelQuality[i][j] = 0.5;
+
+        this->_userInfo[i].channelQuality = _channelQuality[i];
     }
+
+    /* Access the configurator instance */
+    this->_config = ConfiguratorInterface::commandGetConfiguratorInstance(this);
 
     cMessage *notification = new cMessage("scheduler");
     scheduleAt(simTime() + _schedCycle, notification);
+}
+
+void Scheduler::commandUpdateChannelQuality(int userId, int RB, double value)
+{
+    if (RB < 0 || RB >= _numRBs)
+        return;
+
+    if (userId < 0 || userId >= _numConnections)
+        return;
+
+    _channelQuality[userId][RB] = value;
 }
 
 void Scheduler::_readUserInfo()
@@ -69,27 +107,72 @@ void Scheduler::_readUserInfo()
       }
 }
 
+void Scheduler::_printChannelQuality()
+{
+    std::stringstream out;
+    out << std::setw(7) << std::left << "Usr/RB";
+    for (int i = 0; i < _numRBs; i++)
+        out << std::setw(5) << std::left << i;
+
+    for (int i = 0; i < _numConnections; i++)
+    {
+        out << std::endl << std::setw(7) << std::left << i;
+        for (int j = 0; j < _numRBs; j++)
+        {
+            out << std::setw(5) << std::left << std::setprecision(2) <<_channelQuality[i][j];
+        }
+    }
+
+    EV << out.str() << std::endl;
+}
+
 void Scheduler::handleMessage(cMessage *msg)
 {
     if (msg->isSelfMessage())
     {
         this->_readUserInfo();
+        this->_printChannelQuality();
 
         SchedulingDecision *decision = _schedulingScheme->schedule(_numConnections, _userInfo);
         if (decision != nullptr)
         {
             for (int i = 0; i < _numConnections; i++)
             {
-                int toSend = decision->getAllocationForUser(i).count;
-                if (toSend != 0)
+                SchUserAllocation userAllocation = decision->getAllocationForUser(i);
+                if (userAllocation.count != 0)
                 {
+                    std::vector<int> gridAllocation;
                     ResourceAllocation *ctrl = new ResourceAllocation("scheduler");
-                    ctrl->setNumRBsToSend(toSend);
 
-                    send(ctrl, this->gate("ctrl$o", i));
+                    EV << "Allocation for user " << i << ": ";
+                    for (int j = 0; j < userAllocation.count; j++)
+                    {
+                        EV << "(RB: " << userAllocation.RBs[j].RB << ", t: " << userAllocation.RBs[j].timeslot << ") ";
+                        gridAllocation.push_back(userAllocation.RBs[j].RB);
+                    }
+                    EV << endl;
+
+                    ctrl->setNumRBsToSend(userAllocation.count);
+                    ctrl->setGridAllocation(gridAllocation);
+
+                    /* Try to send data through wireless link */
+                    if (_config != nullptr)
+                    {
+                        sendDirect(ctrl, _config->commandGetUserControlEndpoint(i));
+                    }
+                    else
+                    {
+                        /*
+                         * Need to create the physical connection before sending.
+                         * For now, report an error. Normally this should not happen.
+                         */
+
+                        error("Unable to send! Critical error!");
+                        /* send(ctrl, this->gate("ctrl$o", i)); */
+                    }
                 }
 
-                emit(_signalUserAllocation[i], (unsigned long int) toSend);
+                emit(_signalUserAllocation[i], (unsigned long int) userAllocation.count);
             }
         }
 

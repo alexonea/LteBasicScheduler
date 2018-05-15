@@ -22,8 +22,12 @@
 
 Define_Module(RGen);
 
+int RGen::count = 0;
+
 void RGen::initialize()
 {
+    this->_id = count++;
+
     cModule *transcieverModule = this->getParentModule()->getSubmodule("transceiver");
     this->_defaultPacketSize = par("defaultPacketSize");
     this->_nextEventOffset = par("nextEventOffset");
@@ -40,10 +44,7 @@ void RGen::handleMessage(cMessage *msg)
     {
         DataPacket *dp = new DataPacket("data");
         dp->setSize(_defaultPacketSize);
-
-        /*
-         * We must also set the sender ID here, for now it is not set
-         */
+        dp->setSenderId(_id);
 
         /* try using direct call, otherwise use default message communication */
         if (_transcieverManager != nullptr)

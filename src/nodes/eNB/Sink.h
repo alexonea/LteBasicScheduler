@@ -18,6 +18,8 @@
 
 #include <omnetpp.h>
 
+#include "ChannelQualityReportingInterface.h"
+
 using namespace omnetpp;
 
 typedef struct _UserStats
@@ -31,14 +33,15 @@ typedef struct _UserStats
 class Sink : public cSimpleModule
 {
 protected:
-    virtual void initialize();
-    virtual void handleMessage(cMessage *msg);
-    virtual void finish();
+    virtual void initialize() override;
+    virtual void handleMessage(cMessage *msg) override;
+    virtual void finish() override;
 private:
     unsigned int _numUsers;
     double _statsUpdateCycle;
     UserStats *_userStats;
     simsignal_t *_signalUserRBs;
+    ChannelQualityReportingInterface *_channelQualityManager;
 };
 
 #endif

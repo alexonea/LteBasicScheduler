@@ -18,17 +18,20 @@ package ltebasicscheduler.nodes.eNB;
 module eNB
 {
 	parameters:
+	    @display("i=device/antennatower");
 		int maxConnections = default(100);
+		int schedulingScheme = default(0);	// use 0 for round-robin, 1 for proportional-fair
+		scheduler.schedulingScheme = schedulingScheme;
 	gates:
 		inout ctrl[maxConnections] @loose;
 		input ulink[maxConnections] @loose;
 	submodules:
 		sink : Sink { size = maxConnections; };
-		sched : Scheduler { size = maxConnections; };
+		scheduler : Scheduler { size = maxConnections; };
 	connections:
 		for i = 0..(maxConnections - 1)
 		{
 			ulink++ --> sink.drain++;
-			ctrl++ <--> sched.ctrl++;
+			ctrl++ <--> scheduler.ctrl++;
 		}
 }

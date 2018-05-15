@@ -1,5 +1,5 @@
 //
-// Generated file, do not edit! Created by nedtool 5.3 from messages/QueueControl.msg.
+// Generated file, do not edit! Created by nedtool 5.3 from nodes/UE/../../messages/QueueControl.msg.
 //
 
 #if defined(__clang__)
@@ -18,12 +18,17 @@
 
 
 
+// cplusplus {{
+    typedef std::vector<int> ResourceGridAllocation;
+// }}
+
 /**
- * Class generated from <tt>messages/QueueControl.msg:16</tt> by nedtool.
+ * Class generated from <tt>nodes/UE/../../messages/QueueControl.msg:23</tt> by nedtool.
  * <pre>
  * message QueueControl
  * {
  *     int dequeue;
+ *     ResourceGridAllocation allocation;
  * }
  * </pre>
  */
@@ -31,6 +36,7 @@ class QueueControl : public ::omnetpp::cMessage
 {
   protected:
     int dequeue;
+    ResourceGridAllocation allocation;
 
   private:
     void copy(const QueueControl& other);
@@ -51,6 +57,9 @@ class QueueControl : public ::omnetpp::cMessage
     // field getter/setter methods
     virtual int getDequeue() const;
     virtual void setDequeue(int dequeue);
+    virtual ResourceGridAllocation& getAllocation();
+    virtual const ResourceGridAllocation& getAllocation() const {return const_cast<QueueControl*>(this)->getAllocation();}
+    virtual void setAllocation(const ResourceGridAllocation& allocation);
 };
 
 inline void doParsimPacking(omnetpp::cCommBuffer *b, const QueueControl& obj) {obj.parsimPack(b);}

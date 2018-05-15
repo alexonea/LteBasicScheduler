@@ -17,21 +17,21 @@ package ltebasicscheduler.networks;
 
 import ltebasicscheduler.nodes.UE.*;
 import ltebasicscheduler.nodes.eNB.*;
+import ltebasicscheduler.nodes.configurator.*;
 
 network BasicNetwork
 {
     parameters:
         int size = default(10);
         int bandwidth = default(20) @units(MHz);
-    
     submodules:
-        n[size] : UE;
-        eNodeB : eNB { maxConnections = size; };
-    
+        n[size] : UE { @display("p=200,200,ri,200,200"); };
+        eNodeB : eNB { maxConnections = size; @display("p=400,400"); };
+        configurator: Configurator { networkSize = size; };
     connections:
-        for i = 0..(size - 1)
-        {
-			n[i].ctrl <--> { delay = uniform(10us, 100us); } <--> eNodeB.ctrl++;
-			n[i].data --> { delay = uniform(10us, 100us); } --> eNodeB.ulink++;
-        }
+        //for i = 0..(size - 1)
+        //{
+		//	n[i].ctrl <--> { delay = uniform(10us, 100us); } <--> eNodeB.ctrl++;
+		//	n[i].data --> { delay = uniform(10us, 100us); } --> eNodeB.ulink++;
+        //}
 }

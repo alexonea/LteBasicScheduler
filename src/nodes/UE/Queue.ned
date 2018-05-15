@@ -17,6 +17,8 @@ package ltebasicscheduler.nodes.UE;
 
 simple Queue
 {
+    parameters:
+        volatile double channelQuality = uniform(0.0, 1.0);
     gates:
         input in;
         input request;

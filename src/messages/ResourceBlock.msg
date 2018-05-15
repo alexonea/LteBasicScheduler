@@ -17,4 +17,6 @@
 packet ResourceBlock {
     int senderId;
     int size;
+    int resourceGridId;
+    double channelQuality;
 }

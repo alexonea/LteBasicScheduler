@@ -23,6 +23,7 @@ Define_Module(Queue);
 
 void Queue::initialize()
 {
+    this->_config = ConfiguratorInterface::commandGetConfiguratorInstance(this);
 }
 
 void Queue::handleMessage(cMessage *msg)
@@ -35,8 +36,9 @@ void Queue::handleMessage(cMessage *msg)
     {
         QueueControl *req = static_cast <QueueControl *> (msg);
         int toDequeue = req->getDequeue();
+        std::vector<int> allocation = req->getAllocation();
 
-        this->commandDequeue(toDequeue);
+        this->commandDequeue(toDequeue, allocation);
 
         delete req;
     }
@@ -69,23 +71,41 @@ int Queue::commandReadQueueLength()
     return _queueData.size();
 }
 
-int Queue::commandDequeue(int numItems)
+int Queue::commandDequeue(int numItems, std::vector<int> allocation)
 {
     Enter_Method("Queue::commandDequeue");
 
-    int itemsLeft = numItems;
-    while (!_queueData.empty() && itemsLeft > 0)
+    int count = 0;
+    while (!_queueData.empty() && count < numItems)
     {
         ResourceBlock *rb = _queueData.front();
         _queueData.pop();
 
-        drop(rb);
-        send(rb, "out");
+        rb->setResourceGridId(allocation[count]);
+        rb->setChannelQuality(par("channelQuality"));
 
-        itemsLeft--;
+        drop(rb);
+
+        if (_config != nullptr)
+        {
+            simtime_t delay = uniform(0.00001, 0.0001);
+            sendDirect(rb, delay, delay, _config->commandGetENBUplinkEndpoint(rb->getSenderId()));
+        }
+        else
+        {
+            /*
+             * We need to first create the connection and then send.
+             * For now, error
+             */
+
+            error("Connection not established, cannot send");
+            /* send(rb, "out"); */
+        }
+
+        count++;
     }
 
-    return numItems - itemsLeft;
+    return count;
 }
 
 int Queue::commandQueue(ResourceBlock **RBs, int numItems)

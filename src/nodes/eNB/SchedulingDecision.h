@@ -19,6 +19,7 @@
 #include "SchedulingUserAllocation.h"
 
 class RoundRobinSchedulingScheme;
+class ProportionalFairSchedulingScheme;
 
 class SchedulingDecision
 {
@@ -29,6 +30,7 @@ public:
 protected:
     void allocateToUser(int userId, int RB, int timeslot);
     friend class RoundRobinSchedulingScheme;
+    friend class ProportionalFairSchedulingScheme;
 private:
     SchUserAllocation *_allocation;
     int _numUsers;

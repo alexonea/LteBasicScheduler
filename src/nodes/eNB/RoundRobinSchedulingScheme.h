@@ -24,16 +24,14 @@
 class RoundRobinSchedulingScheme : public SchedulingScheme
 {
 public:
-    RoundRobinSchedulingScheme();
+    RoundRobinSchedulingScheme(int numRBs, int numUsers, int fixedAllocationSize);
     virtual ~RoundRobinSchedulingScheme();
 
     virtual SchedulingDecision* schedule(int numUsers, UserInfo *userInfo) override;
 private:
     static int _findNextUser(int currentUserId, int numUsers, UserInfo *userInfo);
 
-    int _numRBs;
     int _fixedAllocationSize;
-    int *_schedTable;
 };
 
 #endif /* NODES_ENB_ROUNDROBINSCHEDULINGSCHEME_H_ */

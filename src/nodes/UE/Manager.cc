@@ -20,12 +20,9 @@
 
 Define_Module(Manager);
 
-int Manager::count = 0;
-
 void Manager::initialize()
 {
     cModule *queueModule = this->getParentModule()->getSubmodule("queue");
-    this->_id = count++;
     this->_queueManager = check_and_cast <Queue *> (queueModule);
 }
 
@@ -38,11 +35,12 @@ void Manager::handleMessage(cMessage *msg)
         {
             ResourceAllocation *ctrl = static_cast <ResourceAllocation *> (msg);
             int allowance = ctrl->getNumRBsToSend();
+            std::vector<int> allocation = ctrl->getGridAllocation();
 
             /* Try communication using direct module calls */
             if (_queueManager != nullptr)
             {
-                _queueManager->commandDequeue(allowance);
+                _queueManager->commandDequeue(allowance, allocation);
             }
             /* in case of error, fall back to the default message communication */
             else
@@ -52,7 +50,6 @@ void Manager::handleMessage(cMessage *msg)
                 send(req, "queueRequest");
             }
 
-            EV << "User " << _id << " allowed to transmit " << allowance << " RBs in current scheduling cycle\n";
             delete ctrl;
         }
     }

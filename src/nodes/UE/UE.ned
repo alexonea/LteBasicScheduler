@@ -17,16 +17,16 @@ package ltebasicscheduler.nodes.UE;
 
 module UE
 {
+    parameters:
+        @display("i=device/cellphone");
     gates:
-        inout ctrl;
-        output data;
-
+        inout ctrl @directIn;
+        output data @loose;
     submodules:
         source : RGen;
         queue: Queue;
         manager : Manager;
         transceiver: Transceiver;
-
 	connections:
 	    source.out --> transceiver.dataTX;
 	    transceiver.RBTX --> queue.in;
